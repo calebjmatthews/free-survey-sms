@@ -1,0 +1,5 @@
+{
+  "apps": [{
+    "script" : "./server/app.js"
+  }]
+}

@@ -1,0 +1,39 @@
+{
+  "name": "cjm-portfolio",
+  "version": "2.0.0",
+  "description": "Personal portfolio to display programming projects",
+  "repository": "https://github.com/calebjmatthews/cjm-portfolio",
+  "private": false,
+  "scripts": {
+    "start": "node server/app.js",
+    "build": "npx webpack"
+  },
+  "author": "Caleb J. Matthews",
+  "license": "MIT",
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.28",
+    "@fortawesome/free-solid-svg-icons": "^5.13.0",
+    "@fortawesome/react-fontawesome": "^0.1.9",
+    "express": "^4.17.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.1.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.6",
+    "@types/react": "^16.9.34",
+    "@types/react-dom": "^16.9.6",
+    "@types/react-router-dom": "^5.1.5",
+    "css-loader": "^3.5.2",
+    "file-loader": "^6.0.0",
+    "source-map-loader": "^0.2.4",
+    "style-loader": "^1.1.4",
+    "ts-loader": "^7.0.1",
+    "typescript": "^3.8.3",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  },
+  "engines": {
+    "node": ">=12.16.2"
+  }
+}

@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+      "outDir": "./dist/",
+      "module": "commonjs",
+      "sourceMap": true,
+      "target": "ES6",
+      "jsx": "react",
+      "esModuleInterop": true
+    },
+    "include": [
+      "client/*",
+      "client/**/*"
+    ],
+    "exclude": [
+      "node_modules",
+      "server"
+    ]
+}

@@ -1,0 +1,85 @@
+.snippets {
+  flex: 1 0;
+  background: #fffdfa;
+}
+
+.snippets .body {
+  margin: 2em 10%;
+}
+
+.snippet {
+  padding: 0.5em;
+  border: 1px solid #39516a;
+}
+
+.snippet .title {
+  font-size: 1.4em;
+}
+
+.snippet .date-line {
+  opacity: 0.5;
+  font-size: 0.8em;
+  margin-left: 1em;
+}
+
+.snippet .content-header {
+  display: flex;
+}
+
+.snippet .tab {
+  padding: 0.5em 1.5em;
+  cursor: pointer;
+  border: 1px solid #39516b;
+  background: #fffdfa;
+  transition: background ease-in-out 0.3s;
+}
+.snippet .tab:hover {
+  background: #a9bbce7d;
+}
+
+.snippet .tab.selected {
+  background: #39516b;
+  color: #fff;
+}
+
+.snippet .content-container {
+  padding: 1em;
+  background: #39516b;
+  color: #fff;
+  border: 1px solid #39516b;
+}
+
+.snippet .description {
+  margin: 0.5em 0 1em 0;
+}
+
+.snippet .section p {
+  text-indent: 1em;
+}
+
+.snippet code {
+  font-size: 1.2em;
+  background: #6c7986;
+  padding: 0 0.25em;
+  border-radius: 0.25em;
+}
+
+.snippet pre {
+  background: #546477;
+  padding: 0 0.5em 0.5em 0.5em;
+  border-radius: 0.25em;
+}
+
+.snippet label {
+  font-style: italic;
+}
+
+.snippet a {
+  color: #9093ff;
+}
+
+.scrambled-text {
+  font-family: monospace;
+  word-break: break-all;
+  line-height: 1.2em;
+}

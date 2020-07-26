@@ -1,0 +1,102 @@
+body {
+  margin: unset;
+  font-family: 'Manrope', sans-serif;
+}
+
+.app {
+  height: 100vh;
+  width: 100vw;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-evenly;
+  background: #fffdfa;
+}
+
+.header-section {
+  font-size: 1.2em;
+  letter-spacing: 0.1em;
+  padding: 0.5em 1.5em;
+  background: #fffdfa;
+  cursor: pointer;
+  transition: background ease-in-out 0.3s;
+}
+.header-section:hover {
+  background: #a9bbce7d;
+}
+.header-section.selected {
+  background: #39516b;
+  color: #fffdfa;
+}
+
+.spacer {
+  height: 10em;
+}
+
+.home {
+  flex: 1 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.home .body {
+  flex: 1 0;
+  background: #fffdfa;
+}
+
+.angled-border {
+  z-index: -1;
+  width: 120%;
+  height: 7em;
+  background: #fffdfa;
+}
+
+
+.angled-border-top {
+  transform: rotate(-5deg) translateY(-5.5vw) translateX(-1vw);
+}
+
+.angled-border-bottom {
+  transform: rotate(-5deg) translateY(4.5vw) translateX(-1vw);
+}
+
+.background-image {
+  z-index: -2;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: auto;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.icon-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1em;
+  height: 1em;
+  font-size: 2em;
+  background: #fffdfa;
+  border: 1px solid #39516b;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background ease-in-out 0.2s, color ease-in-out 0.2s;
+}
+.icon-button:hover {
+  color: #fff;
+  background: #39516b;
+}
