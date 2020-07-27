@@ -11,12 +11,13 @@ export default function Signup() {
   function changePassword(ev: any) {
     setPassword(ev.target.value);
   }
-  function changeConfirm(ev: any) { 
+  function changeConfirm(ev: any) {
     setConfirm(ev.target.value);
   }
 
   return (
     <div className="signup">
+      <h3>Quick sign-up:</h3>
       <div className="input-group">
         <div className="input-label">Email</div>
         <input type="email" value={email} onChange={changeEmail} />

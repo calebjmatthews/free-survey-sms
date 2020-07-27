@@ -1,5 +1,6 @@
 import React from 'react';
 import Signup from './signup';
+import Contacts from './contacts';
 
 export default function Home() {
   return (
@@ -11,9 +12,7 @@ export default function Home() {
         <hr />
         <Signup />
         <hr />
-        <div>
-          Add contacts (limit of 30 for now)
-        </div>
+        <Contacts />
         <hr />
         <div>
           Construct SMS survey: suggested opening, 2 - 6 question options, suggested auto-response with results, Send!

@@ -59,6 +59,21 @@ body {
   justify-content: space-between;
 }
 
+.button {
+  padding: 0.25em 1em;
+  font-family: 'Manrope', sans-serif;
+  text-align: center;
+  background: #39516a;
+  color: #fffdfa;
+  border: none;
+  border-radius: 0.25em;
+  transition: background 0.3s ease-in-out;
+  cursor: pointer;
+}
+.button:hover {
+  background: #39516ac7;
+}
+
 .icon-button {
   display: flex;
   justify-content: center;
