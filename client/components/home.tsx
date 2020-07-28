@@ -2,12 +2,13 @@ import React from 'react';
 import Signup from './signup';
 import Contacts from './contacts';
 import Build from './build';
+import Explain from './explain';
 
 export default function Home() {
   return (
     <div className="home">
       <div className="resp-container">
-        Explanation of features
+        <Explain />
       </div>
       <div className="resp-container">
         <Signup />

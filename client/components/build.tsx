@@ -76,7 +76,7 @@ export default function Build() {
           })}
           <div className="input-group" key={newQuestion.letter}>
             <div className="input-label">Question {newQuestion.letter}</div>
-            <textarea rows={2} value={newQuestion.text}
+            <textarea rows={1} value={newQuestion.text}
               onChange={(ev) => changeNewQuestion(ev)} />
           </div>
           <div className="button" onClick={addQuestion}>Add question</div>
@@ -126,7 +126,7 @@ export default function Build() {
     return (
       <div className="input-group" key={question.letter}>
         <div className="input-label">Question {question.letter}</div>
-        <textarea rows={2} value={question.text}
+        <textarea rows={1} value={question.text}
           onChange={(ev) => changeQuestion(question, ev)} />
       </div>
     );
