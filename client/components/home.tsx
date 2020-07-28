@@ -1,6 +1,7 @@
 import React from 'react';
 import Signup from './signup';
 import Contacts from './contacts';
+import Build from './build';
 
 export default function Home() {
   return (
@@ -14,9 +15,7 @@ export default function Home() {
         <hr />
         <Contacts />
         <hr />
-        <div>
-          Construct SMS survey: suggested opening, 2 - 6 question options, suggested auto-response with results, Send!
-        </div>
+        <Build />
       </div>
     </div>
   );
