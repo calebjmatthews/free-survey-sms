@@ -12,7 +12,7 @@ export default function Build() {
     + 'the cookout?');
   const [questions, setQuestions] = useState(emptyQuestions);
   const [newQuestion, setNewQuestion] = useState(new Question({letter: 'A', text: ''}));
-  const [response, setResponse] = useState('Thanks for your response! Here are the '
+  const [response, setResponse] = useState('Thanks for your input! Here are the '
     +  'results from the survey so far: ');
   const [showLink, setShowLink] = useState(true);
 
@@ -58,14 +58,14 @@ export default function Build() {
   }
 
   function toggleShowLink(ev: any) {
-    setShowLink(ev.target.checked)
+    setShowLink(!showLink)
   }
 
   return (
     <div className="build">
       <h3>Build the survey:</h3>
-      <div className="row">
-        <div>
+      <div className="resp-row">
+        <div className="resp-row-child">
           <div className="input-group">
             <div className="input-label">Opener</div>
             <textarea rows={3} value={opener} onChange={changeOpener} />
@@ -84,33 +84,37 @@ export default function Build() {
             <div className="input-label">Response</div>
             <textarea rows={3} value={response} onChange={changeResponse} />
           </div>
-          <div className="input-group">
+          <div className="checkbox-group">
             <input type="checkbox" checked={showLink} onChange={toggleShowLink} />
-            <div className="input-label">Show link to survey results</div>
+            <div className="input-label" onClick={toggleShowLink}>
+              Show link to survey results
+            </div>
           </div>
         </div>
-        <div>
+        <div className="resp-row-child">
           <h4>Here's what your survey will look like:</h4>
-          <div>
-            {opener + ' '}
-            {Object.keys(questions).map((letter) => {
-              let question = questions[letter];
-              return (
-                <span id={letter}>
-                  {question.letter + ') ' + question.text + ' '}
-                </span>
-              );
-            })}
-            <span>
-              {newQuestion.letter + ') ' + newQuestion.text}
-            </span>
-          </div>
-          <div>
-            A
-          </div>
-          <div>
-            {response + ' '}
-            {renderLink()}
+          <div className="survey-demo">
+            <div className="demo-message incoming">
+              {opener + ' '}
+              {Object.keys(questions).map((letter) => {
+                let question = questions[letter];
+                return (
+                  <span id={letter}>
+                    {question.letter + ') ' + question.text + ' '}
+                  </span>
+                );
+              })}
+              <span>
+                {newQuestion.letter + ') ' + newQuestion.text}
+              </span>
+            </div>
+            <div className="demo-message outgoing">
+              A
+            </div>
+            <div className="demo-message incoming">
+              {response + ' '}
+              {renderLink()}
+            </div>
           </div>
         </div>
       </div>

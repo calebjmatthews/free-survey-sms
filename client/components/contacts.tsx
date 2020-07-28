@@ -60,13 +60,13 @@ export default function Signup() {
         let contact = contacts[id];
         return renderContact(contact);
       })}
-      <div className="row">
-        <div className="input-group">
+      <div className="resp-row">
+        <div className="input-group resp-row-child">
           <div className="input-label">Phone number</div>
           <input type="tel" value={newContact.phone}
             onChange={(ev) => changeNewPhone(newContact, ev)} />
         </div>
-        <div className="input-group">
+        <div className="input-group resp-row-child">
           <div className="input-label">Name (optional)</div>
           <input type="text" value={newContact.name}
             onChange={(ev) => changeNewName(newContact, ev)} />
@@ -78,13 +78,13 @@ export default function Signup() {
 
   function renderContact(contact: Contact) {
     return (
-      <div className="row" key={contact.id}>
-        <div className="input-group">
+      <div className="resp-row" key={contact.id}>
+        <div className="input-group resp-row-child">
           <div className="input-label">Phone number</div>
           <input type="tel" value={contact.phone}
             onChange={(ev) => changePhone(contact, ev)} />
         </div>
-        <div className="input-group">
+        <div className="input-group resp-row-child">
           <div className="input-label">Name (optional)</div>
           <input type="text" value={contact.name}
             onChange={(ev) => changeName(contact, ev)} />

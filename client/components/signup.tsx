@@ -18,17 +18,24 @@ export default function Signup() {
   return (
     <div className="signup">
       <h3>Quick sign-up:</h3>
-      <div className="input-group">
-        <div className="input-label">Email</div>
-        <input type="email" value={email} onChange={changeEmail} />
-      </div>
-      <div className="input-group">
-        <div className="input-label">Password</div>
-        <input type="password" value={password} onChange={changePassword} />
-      </div>
-      <div className="input-group">
-        <div className="input-label">Confirm password</div>
-        <input type="password" value={confirm} onChange={changeConfirm} />
+      <div className="resp-row">
+        <div className="resp-row-child">
+          <div className="input-group">
+            <div className="input-label">Email</div>
+            <input type="email" value={email} onChange={changeEmail} />
+          </div>
+          <div className="input-group">
+            <div className="input-label">Password</div>
+            <input type="password" value={password} onChange={changePassword} />
+          </div>
+          <div className="input-group">
+            <div className="input-label">Confirm password</div>
+            <input type="password" value={confirm} onChange={changeConfirm} />
+          </div>
+        </div>
+        <div className="resp-row-child">
+          You'll use this email and password to see the final results of your survey.
+        </div>
       </div>
     </div>
   );
