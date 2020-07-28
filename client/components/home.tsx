@@ -7,14 +7,15 @@ export default function Home() {
   return (
     <div className="home">
       <div className="resp-container">
-        <div>
-          Explanation of features
-        </div>
-        <hr />
+        Explanation of features
+      </div>
+      <div className="resp-container">
         <Signup />
-        <hr />
+      </div>
+      <div className="resp-container">
         <Contacts />
-        <hr />
+      </div>
+      <div className="resp-container">
         <Build />
       </div>
     </div>
