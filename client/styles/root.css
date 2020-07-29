@@ -72,6 +72,9 @@ body {
   margin-left: 0.5em;
   margin-right: 0;
 }
+.resp-row-child.top {
+  align-self: flex-start;
+}
 
 .button {
   padding: 0.25em 1em;

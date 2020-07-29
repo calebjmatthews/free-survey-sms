@@ -3,15 +3,15 @@ import React, { useState, useEffect } from 'react';
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
   'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 let highestLetter = 0;
-let emptyQuestions: {[letter: string] : Question} = {};
+let emptyOptions: {[letter: string] : Option} = {};
 const url = 'https://freesurveysms.io/';
 const link = 'qr93kl22';
 
 export default function Build() {
   const [opener, setOpener] = useState('From Jane Smith: what\'s the best time for '
     + 'the cookout?');
-  const [questions, setQuestions] = useState(emptyQuestions);
-  const [newQuestion, setNewQuestion] = useState(new Question({letter: 'A', text: ''}));
+  const [options, setOptions] = useState(emptyOptions);
+  const [newOption, setNewOption] = useState(new Option({letter: 'A', text: ''}));
   const [response, setResponse] = useState('Thanks for your input! Here are the '
     +  'results from the survey so far: ');
   const [showLink, setShowLink] = useState(true);
@@ -20,36 +20,36 @@ export default function Build() {
     setOpener(ev.target.value);
   }
 
-  function changeQuestion(question: Question, ev: any) {
+  function changeOption(option: Option, ev: any) {
     let text = ev.target.value;
-    setQuestions((qs) => {
-      let updQuestion = qs[question.letter];
-      updQuestion.text = text;
-      let updQuestions = Object.assign({}, qs);
-      updQuestions[question.letter];
-      return updQuestions;
+    setOptions((os) => {
+      let updOption = os[option.letter];
+      updOption.text = text;
+      let updOptions = Object.assign({}, os);
+      updOptions[option.letter];
+      return updOptions;
     });
   }
 
-  function changeNewQuestion(ev: any) {
+  function changeNewOption(ev: any) {
     let text = ev.target.value;
-    setNewQuestion((nq) => {
-      let updQuestion = new Question(nq);
-      updQuestion.text = text;
-      return updQuestion;
+    setNewOption((no) => {
+      let updOption = new Option(no);
+      updOption.text = text;
+      return updOption;
     })
   }
 
-  function addQuestion() {
-    setQuestions((qs) => {
-      let updQuestions = qs;
-      updQuestions[newQuestion.letter] = newQuestion;
-      return updQuestions;
+  function addOption() {
+    setOptions((os) => {
+      let updOptions = os;
+      updOptions[newOption.letter] = newOption;
+      return updOptions;
     });
-    setNewQuestion((nq) => {
+    setNewOption((no) => {
       let newLetter = letters[highestLetter+1];
       highestLetter++;
-      return new Question({letter: newLetter, text: ''});
+      return new Option({letter: newLetter, text: ''});
     });
   }
 
@@ -70,16 +70,16 @@ export default function Build() {
             <div className="input-label">Opener</div>
             <textarea rows={3} value={opener} onChange={changeOpener} />
           </div>
-          {Object.keys(questions).map((letter) => {
-            let question = questions[letter];
-            return renderQuestion(question);
+          {Object.keys(options).map((letter) => {
+            let option = options[letter];
+            return renderOption(option);
           })}
-          <div className="input-group" key={newQuestion.letter}>
-            <div className="input-label">Question {newQuestion.letter}</div>
-            <textarea rows={1} value={newQuestion.text}
-              onChange={(ev) => changeNewQuestion(ev)} />
+          <div className="input-group" key={newOption.letter}>
+            <div className="input-label">Option {newOption.letter}</div>
+            <textarea rows={1} value={newOption.text}
+              onChange={(ev) => changeNewOption(ev)} />
           </div>
-          <div className="button" onClick={addQuestion}>Add question</div>
+          <div className="button" onClick={addOption}>Add option</div>
           <div className="input-group">
             <div className="input-label">Response</div>
             <textarea rows={3} value={response} onChange={changeResponse} />
@@ -96,16 +96,16 @@ export default function Build() {
           <div className="survey-demo">
             <div className="demo-message incoming">
               {opener + ' '}
-              {Object.keys(questions).map((letter) => {
-                let question = questions[letter];
+              {Object.keys(options).map((letter) => {
+                let option = options[letter];
                 return (
                   <span id={letter}>
-                    {question.letter + ') ' + question.text + ' '}
+                    {option.letter + ') ' + option.text + ' '}
                   </span>
                 );
               })}
               <span>
-                {newQuestion.letter + ') ' + newQuestion.text}
+                {newOption.letter + ') ' + newOption.text}
               </span>
             </div>
             <div className="demo-message outgoing">
@@ -122,12 +122,12 @@ export default function Build() {
     </div>
   );
 
-  function renderQuestion(question: Question) {
+  function renderOption(option: Option) {
     return (
-      <div className="input-group" key={question.letter}>
-        <div className="input-label">Question {question.letter}</div>
-        <textarea rows={1} value={question.text}
-          onChange={(ev) => changeQuestion(question, ev)} />
+      <div className="input-group" key={option.letter}>
+        <div className="input-label">Option {option.letter}</div>
+        <textarea rows={1} value={option.text}
+          onChange={(ev) => changeOption(option, ev)} />
       </div>
     );
   }
@@ -140,10 +140,10 @@ export default function Build() {
   }
 }
 
-class Question {
+class Option {
   letter: string;
   text: string;
-  constructor(question: Question) {
-    Object.assign(this, question);
+  constructor(option: Option) {
+    Object.assign(this, option);
   }
 }

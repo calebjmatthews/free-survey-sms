@@ -25,13 +25,13 @@ export default function Explain() {
         <div className="resp-row-child">
           <div className="survey-demo">
             <div className="demo-message incoming">
-              From Mike Scottsman: What's your preference for this week's meeting? A) Video conference B) Phone call C) Email
+              From Pat McTrusty: What do you want for lunch at this week's meeting? A) Sandwiches B) Pizza C) Salad
             </div>
             <div className="demo-message outgoing">
               B
             </div>
             <div className="demo-message incoming">
-            Thanks for your input! Here are the results from the survey so far: https://freesurveysms.io/qr93kl22
+              Thanks for your input! Here are the results from the survey so far: https://freesurveysms.io/qr93kl22
             </div>
           </div>
         </div>
@@ -51,15 +51,15 @@ export default function Explain() {
         </div>
       </div>
       <div className="resp-row">
-        <div className="resp-row-child">
+        <div className="resp-row-child top">
           <h4>Create a survey</h4>
-          <div>Use this very page to put together a survey in just a few minutes.</div>
+          <div>Use this page to put together a survey in just a few minutes.</div>
         </div>
-        <div className="resp-row-child">
+        <div className="resp-row-child top">
           <h4>Texts go out</h4>
           <div>The survey texts will go out to each respondent you've added, and their response will be recorded automatically.</div>
         </div>
-        <div className="resp-row-child">
+        <div className="resp-row-child top">
           <h4>Results available at once!</h4>
           <div>As soon as one response has been gathered, the results of the survey are available.</div>
         </div>

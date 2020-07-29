@@ -6,7 +6,7 @@ import Explain from './explain';
 
 export default function Home() {
   return (
-    <div className="home">
+    <form className="home">
       <div className="resp-container">
         <Explain />
       </div>
@@ -19,6 +19,6 @@ export default function Home() {
       <div className="resp-container">
         <Build />
       </div>
-    </div>
+    </form>
   );
 }
