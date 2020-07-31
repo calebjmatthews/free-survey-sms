@@ -21,8 +21,11 @@ module.exports = function(app) {
   )));
 
   // Routes go here
-
-
+  app.post('/survey_new', (req, res) => {
+    console.log('req');
+    console.log(req);
+    res.status(200).send('Survey inserted');
+  })
 
   app.all('/*', (req, res) => {
     console.log('Requested route not found:');

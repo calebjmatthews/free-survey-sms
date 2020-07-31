@@ -1,4 +1,5 @@
 import React, { createRef } from 'react';
+const axios = require('axios').default;
 import Signup from './signup';
 import Contacts from './contacts';
 import Build from './build';
@@ -26,6 +27,12 @@ export default function Home() {
     console.log(contactsState);
     console.log('buildState');
     console.log(buildState);
+    axios.post('/survey_new',
+      {signup: signupState, contacts: contactsState, build: buildState})
+    .then((res) => {
+      console.log('res');
+      console.log(res);
+    })
   }
 
   return (
