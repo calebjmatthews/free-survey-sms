@@ -91,6 +91,12 @@ body {
 .button:hover {
   background: #39516ac7;
 }
+.button.button-large {
+  margin-bottom: unset;
+  font-size: 1.2em;
+  font-weight: bold;
+  padding: 1em;
+}
 
 .icon-button {
   display: flex;

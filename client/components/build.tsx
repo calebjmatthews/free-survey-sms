@@ -7,7 +7,7 @@ let emptyOptions: {[letter: string] : Option} = {};
 const url = 'https://freesurveysms.io/';
 const link = 'qr93kl22';
 
-export default function Build() {
+export default function Build(props: {updateParent: Function}) {
   const [opener, setOpener] = useState('From Jane Smith: what\'s the best time for '
     + 'the cookout?');
   const [options, setOptions] = useState(emptyOptions);
@@ -39,6 +39,11 @@ export default function Build() {
       return updOption;
     })
   }
+
+  useEffect(() => {
+    props.updateParent({opener: opener, options: options, newOption: newOption,
+      response: response, showLink: showLink});
+  })
 
   function addOption() {
     setOptions((os) => {
@@ -118,7 +123,6 @@ export default function Build() {
           </div>
         </div>
       </div>
-
     </div>
   );
 

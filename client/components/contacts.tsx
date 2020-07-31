@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { utils } from '../utils';
 
 let emptyContacts: { [id: number] : Contact } = {};
-export default function Signup() {
+export default function Contacts(props: {updateParent: Function}) {
   const [contacts, setContacts] = useState(emptyContacts);
   function setContactField(value: any, fieldName: string, id: number) {
     setContacts((cts) => {
@@ -21,6 +21,10 @@ export default function Signup() {
       return updContact;
     });
   }
+
+  useEffect(() => {
+    props.updateParent({contacts: contacts, newContact: newContact});
+  })
 
   function addContact() {
     setContacts((cts) => {

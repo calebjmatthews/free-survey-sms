@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export default function Signup() {
+export default function Signup(props: {updateParent: Function}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -14,6 +14,10 @@ export default function Signup() {
   function changeConfirm(ev: any) {
     setConfirm(ev.target.value);
   }
+
+  useEffect(() => {
+    props.updateParent({email: email, password: password, confirm: confirm});
+  })
 
   return (
     <div className="signup">
