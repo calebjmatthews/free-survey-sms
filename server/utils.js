@@ -1,6 +1,6 @@
 class Utils {
-  seed: number;
-  rand: Function;
+  seed;
+  rand;
 
   constructor() {
     let seedNum = parseInt(new Date(Date.now()).valueOf().toString().slice(-4));
@@ -10,7 +10,7 @@ class Utils {
     this.rand = this.sfc32(0x9E3779B9, 0x243F6A88, 0xB7E15162, this.seed);
   }
 
-  sfc32(a: number, b: number, c: number, d: number) {
+  sfc32(a, b, c, d) {
     return function() {
       a >>>= 0; b >>>= 0; c >>>= 0; d >>>= 0;
       var t = (a + b) | 0;
@@ -24,19 +24,19 @@ class Utils {
     }
   }
 
-  randHex(len: number) {
+  randHex(len) {
     let maxlen = 8;
     let min = Math.pow(16,Math.min(len,maxlen)-1);
     let max = Math.pow(16,Math.min(len,maxlen)) - 1;
     let n = Math.floor( this.rand() * (max-min+1) ) + min;
     let r = n.toString(16);
     while (r.length < len) {
-      r = r + this.randHex( len - maxlen );
+      r = r + randHex( len - maxlen );
     }
     return r;
   }
 
-  getDateString(date: Date) {
+  getDateString(date) {
     let dateString = '';
     dateString += date.getFullYear() + '-';
     if (date.getMonth()+1 >= 10) {
@@ -56,4 +56,5 @@ class Utils {
   }
 }
 
-export let utils = new Utils();
+let utils = new Utils();
+module.exports = utils;

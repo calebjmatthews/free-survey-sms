@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Contact from '../models/contact';
 import { utils } from '../utils';
 
 let emptyContacts: { [id: number] : Contact } = {};
@@ -95,22 +96,5 @@ export default function Contacts(props: {updateParent: Function}) {
         </div>
       </div>
     );
-  }
-}
-
-class Contact {
-  id?: number;
-  phone: string;
-  name: string;
-  status?: string;
-
-  constructor(contact: Contact) {
-    Object.assign(this, contact);
-    if (!this.id) {
-      this.id = Math.floor(utils.rand() * 1000000000000);
-    }
-    if (!this.status) {
-      this.status = 'clean';
-    }
   }
 }

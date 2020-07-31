@@ -3,6 +3,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const accountNewHandle = require('./account_new');
 
 module.exports = function(app) {
   app.use(bodyParser.urlencoded({ extended: true }));
@@ -21,9 +22,9 @@ module.exports = function(app) {
   )));
 
   // Routes go here
-  app.post('/survey_new', (req, res) => {
-    console.log('req');
-    console.log(req);
+  app.post('/account_new', (req, res) => {
+    let payload = JSON.parse(req.body.payload);
+    accountNewHandle(payload);
     res.status(200).send('Survey inserted');
   })
 

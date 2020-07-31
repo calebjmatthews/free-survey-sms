@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const server = require('http').Server(app);
+require('dotenv-safe').config();
 const setRoutes = require('./routes');
 
 setRoutes(app);

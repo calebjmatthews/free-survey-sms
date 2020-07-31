@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Option from '../models/option';
 
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
   'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
@@ -141,13 +142,5 @@ export default function Build(props: {updateParent: Function}) {
       return (<span>{url + link}</span>);
     }
     return null;
-  }
-}
-
-class Option {
-  letter: string;
-  text: string;
-  constructor(option: Option) {
-    Object.assign(this, option);
   }
 }
