@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const accountNewHandle = require('./account_new');
+const smsIncoming = require('./sms_incoming');
 
 module.exports = function(app) {
   app.use(bodyParser.urlencoded({ extended: true }));
@@ -28,6 +29,15 @@ module.exports = function(app) {
     .then((anhRes) => {
       res.status(200).send('Survey inserted');
     })
+    .catch((err) => {
+      console.error(err);
+    })
+  })
+
+  app.post('/sms_incoming', (req, res) => {
+    res.status(200).send('Message received');
+    smsIncoming(req.body)
+    .then((anhRes) => { })
     .catch((err) => {
       console.error(err);
     })

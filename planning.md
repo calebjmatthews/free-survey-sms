@@ -1,3 +1,6 @@
+ssh -i newsummer root@104.131.48.187
+scp -i newsummer -r /Users/calebmatthews/free-survey-sms-deploy root@104.131.48.187:/root/
+
 Necessary tables
 ----------------
 - accounts: id, email, password, registered_at, last_free_credit
