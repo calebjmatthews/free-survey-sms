@@ -6,16 +6,15 @@ const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'
 let highestLetter = 0;
 let emptyOptions: {[letter: string] : Option} = {};
 const url = 'https://freesurveysms.io/';
-const link = 'qr93kl22';
 
-export default function Build(props: {updateParent: Function}) {
-  const [opener, setOpener] = useState('From Jane Smith: what\'s the best time for '
-    + 'the cookout?');
-  const [options, setOptions] = useState(emptyOptions);
-  const [newOption, setNewOption] = useState(new Option({letter: 'A', text: ''}));
-  const [response, setResponse] = useState('Thanks for your input! Here are the '
-    +  'results from the survey so far: ');
-  const [showLink, setShowLink] = useState(true);
+export default function Build(props: {initState: {surveyId: string, opener: string,
+  options: {[letter: string] : Option}, newOption: Option, response: string,
+  showLink: boolean}, updateParent: Function}) {
+  const [opener, setOpener] = useState(props.initState.opener);
+  const [options, setOptions] = useState(props.initState.options);
+  const [newOption, setNewOption] = useState(props.initState.newOption);
+  const [response, setResponse] = useState(props.initState.response);
+  const [showLink, setShowLink] = useState(props.initState.showLink);
 
   function changeOpener(ev: any) {
     setOpener(ev.target.value);
@@ -42,8 +41,8 @@ export default function Build(props: {updateParent: Function}) {
   }
 
   useEffect(() => {
-    props.updateParent({opener: opener, options: options, newOption: newOption,
-      response: response, showLink: showLink});
+    props.updateParent({surveyId: props.initState.surveyId, opener: opener,
+      options: options, newOption: newOption, response: response, showLink: showLink});
   })
 
   function addOption() {
@@ -119,7 +118,7 @@ export default function Build(props: {updateParent: Function}) {
             </div>
             <div className="demo-message incoming">
               {response + ' '}
-              {renderLink()}
+              {renderLink(props.initState.surveyId)}
             </div>
           </div>
         </div>
@@ -137,9 +136,9 @@ export default function Build(props: {updateParent: Function}) {
     );
   }
 
-  function renderLink() {
+  function renderLink(surveyId: string) {
     if (showLink) {
-      return (<span>{url + link}</span>);
+      return (<span>{url + surveyId}</span>);
     }
     return null;
   }

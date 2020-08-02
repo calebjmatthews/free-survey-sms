@@ -3,19 +3,20 @@ const dbh = require('./db_handler').dbh;
 const utils = require('./utils');
 
 const FREE_MONTHLY_USAGE = 30;
+const FROM_PHONE_NUMBER = '+15555551234';
 
 function accountNewHandle(payload) {
   console.log('payload');
   console.log(payload);
-  let accountId = utils.randHex(8);
-  let surveyId = utils.randHex(8);
   return Promise.all([
-    insertAccount(payload.signup, accountId),
-    insertUsage(accountId),
-    insertSurvey(payload.build, accountId, surveyId),
-    insertSurveyOptions(payload.build, accountId, surveyId),
-    insertSurveyContacts(payload.contacts, accountId, surveyId),
-    insertContacts(payload.contacts, accountId, surveyId)
+    insertAccount(payload.signup, payload.signup.accountId),
+    insertUsage(payload.signup.accountId),
+    insertSurvey(payload.build, payload.signup.accountId, payload.build.surveyId),
+    insertSurveyOptions(payload.build, payload.signup.accountId, payload.build.surveyId),
+    insertSurveyContacts(payload.contacts, payload.signup.accountId,
+      payload.build.surveyId),
+    insertContacts(payload.contacts, payload.signup.accountId, payload.build.surveyId),
+    insertAndSendMessages(payload.build, payload.contacts, payload.signup.accountId)
   ]);
 }
 
@@ -62,7 +63,7 @@ function insertSurveyOptions(build, accountId, surveyId) {
 }
 
 function insertSurveyContacts(contacts, accountId, surveyId) {
-  let insPromises = []
+  let insPromises = [];
   Object.keys(contacts.contacts).map((id) => {
     let contact = contacts.contacts[id];
     let surveyContactId = utils.randHex(8);
@@ -76,13 +77,34 @@ function insertSurveyContacts(contacts, accountId, surveyId) {
 }
 
 function insertContacts(contacts, accountId, surveyId) {
-  let insPromises = []
+  let insPromises = [];
   Object.keys(contacts.contacts).map((id) => {
     let contact = contacts.contacts[id];
     insPromises.push(dbh.pool.query({
       sql: ('INSERT INTO `contacts`(`id`, `account_id`, `phone`, `name`) '
         + 'VALUES (?, ?, ?, ?)'),
       values: [contact.id, accountId, contact.phone, contact.name]
+    }));
+  });
+  return Promise.all(insPromises);
+}
+
+function insertAndSendMessages(build, contacts, accountId) {
+  let text = (build.opener + ' ');
+  Object.keys(build.options).map((letter) => {
+    let option = build.options[letter];
+    text += (option.letter + ')' + option.text + ' ');
+  });
+  let insPromises = [];
+  Object.keys(contacts.contacts).map((id) => {
+    let contact = contacts.contacts[id];
+    let messageId = utils.randHex(8);
+    insPromises.push(dbh.pool.query({
+      sql: ('INSERT INTO `messages`(`id`, `account_id`, `survey_id`, '
+        + '`contact_id`, `status`, `from`, `to`, `text`) '
+        + 'VALUES (?, ?, ?, ?, ?, ?, ?, ?)'),
+      values: [messageId, accountId, build.surveyId, contact.id, 'initiated',
+        FROM_PHONE_NUMBER, contact.phone, text]
     }));
   });
   return Promise.all(insPromises);

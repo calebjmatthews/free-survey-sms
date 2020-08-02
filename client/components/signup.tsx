@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-export default function Signup(props: {updateParent: Function}) {
+export default function Signup(props: {initState: {accountId: string, email: string,
+  password: string, confirm: string}, updateParent: Function}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -16,7 +17,8 @@ export default function Signup(props: {updateParent: Function}) {
   }
 
   useEffect(() => {
-    props.updateParent({email: email, password: password, confirm: confirm});
+    props.updateParent({accountId: props.initState.accountId, email: email,
+      password: password, confirm: confirm});
   })
 
   return (

@@ -6,15 +6,26 @@ import Build from './build';
 import Explain from './explain';
 import Option from '../models/option';
 import Contact from '../models/contact';
+import {utils} from '../utils';
 
 export default function Home() {
   let emptyContacts: { [id: number] : Contact } = {};
-  let signupState = { email: '', password: '', confirm: '' };
+  let signupState = { accountId: utils.randHex(8), email: '', password: '',
+    confirm: '' };
   let contactsState = { contacts: emptyContacts,
-    newContact: new Contact({ phone: '', name: '' }) };
-  let emptyOptions: { [letter: string] : Option } = {};
-  let buildState = { opener: '', options: emptyOptions,
-    newOption: new Option({ letter: 'A', text: '' }), response: '', showLink: true };
+    newContact: new Contact({ id: utils.randHex(8), phone: '', name: '' }) };
+  let newOptions: { [letter: string] : Option } = {};
+  newOptions['A'] = new Option({letter: 'A', text: '10am Sat'});
+  newOptions['B'] = new Option({letter: 'B', text: '1pm Sat'});
+  newOptions['C'] = new Option({letter: 'C', text: '3pm Sun'});
+  let buildState = {
+    surveyId: utils.randHex(8),
+    opener: ('From Jane Smith: what\'s the best time for the cookout?'),
+    options: newOptions,
+    newOption: new Option({ letter: 'D', text: '' }),
+    response: ('Thanks for your input! Here are the results from the survey so far: '),
+    showLink: true
+  };
 
   function updateSignupState(newState: any) {
     signupState = newState;
@@ -53,13 +64,13 @@ export default function Home() {
         <Explain />
       </div>
       <div className="resp-container">
-        <Signup updateParent={updateSignupState} />
+        <Signup initState={signupState} updateParent={updateSignupState} />
       </div>
       <div className="resp-container">
-        <Contacts updateParent={updateContactsState} />
+        <Contacts initState={contactsState} updateParent={updateContactsState} />
       </div>
       <div className="resp-container">
-        <Build updateParent={updateBuildState} />
+        <Build initState={buildState} updateParent={updateBuildState} />
       </div>
       <div className="resp-container">
         <div className="button button-large" onClick={submitSurvey}>

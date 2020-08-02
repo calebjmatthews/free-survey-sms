@@ -24,8 +24,13 @@ module.exports = function(app) {
   // Routes go here
   app.post('/account_new', (req, res) => {
     let payload = JSON.parse(req.body.payload);
-    accountNewHandle(payload);
-    res.status(200).send('Survey inserted');
+    accountNewHandle(payload)
+    .then((anhRes) => {
+      res.status(200).send('Survey inserted');
+    })
+    .catch((err) => {
+      console.error(err);
+    })
   })
 
   app.all('/*', (req, res) => {

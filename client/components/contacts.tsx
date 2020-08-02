@@ -3,9 +3,11 @@ import Contact from '../models/contact';
 import { utils } from '../utils';
 
 let emptyContacts: { [id: number] : Contact } = {};
-export default function Contacts(props: {updateParent: Function}) {
+export default function Contacts(props: {initState:
+  {contacts: { [id: number] : Contact }, newContact: Contact},
+  updateParent: Function}) {
   const [contacts, setContacts] = useState(emptyContacts);
-  function setContactField(value: any, fieldName: string, id: number) {
+  function setContactField(value: any, fieldName: string, id: string) {
     setContacts((cts) => {
       let updContact = new Contact(cts[id]);
       updContact[fieldName] = value;
