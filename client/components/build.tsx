@@ -104,7 +104,7 @@ export default function Build(props: {initState: {surveyId: string, opener: stri
               {Object.keys(options).map((letter) => {
                 let option = options[letter];
                 return (
-                  <span id={letter}>
+                  <span key={letter}>
                     {option.letter + ') ' + option.text + ' '}
                   </span>
                 );
