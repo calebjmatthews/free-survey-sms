@@ -1,5 +1,5 @@
-ssh -i newsummer root@104.131.48.187
-scp -i newsummer -r /Users/calebmatthews/free-survey-sms-deploy root@104.131.48.187:/root/
+ssh -i newsummer cmatthews@104.131.48.187
+scp -i newsummer -r /Users/calebmatthews/free-survey-sms-deploy cmatthews@104.131.48.187:/root/
 
 Necessary tables
 ----------------
@@ -60,3 +60,5 @@ New survey for existing account
   - Insert usage, survey, survey options, survey contacts, and perform contact changes
   - Send survey sms to each survey contact
   - Insert message in messages table, record Twilio call_sid and status
+
+  rsync --archive --chown=cmatthews:cmatthews ~/.ssh /home/cmatthews

@@ -1,8 +1,6 @@
 const mysql = require('promise-mysql');
 
 class DataBaseHandler {
-  pool;
-
   constructor() {
     mysql.createPool({
       host: 'localhost',
