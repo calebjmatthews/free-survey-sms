@@ -7,7 +7,7 @@ function smsIncoming(payload) {
     sql: ('INSERT INTO `messages`(`id`, `call_sid`, `status`, `from`, `to`, `text`) '
       + 'VALUES (?, ?, ?, ?, ?)'),
     values: [messageId, payload.MessageSid, 'received', payload.From, payload.To,
-      req.body.Body]
+      payload.Body]
   })
   .then(() => {
     return dbh.pool.query({
