@@ -22,7 +22,6 @@ module.exports = function(app) {
     path.normalize(`${__dirname}/..`), 'dist'
   )));
 
-  // Routes go here
   app.post('/account_new', (req, res) => {
     let payload = JSON.parse(req.body.payload);
     accountNewHandle(payload)
@@ -35,7 +34,7 @@ module.exports = function(app) {
   })
 
   app.post('/sms_incoming', (req, res) => {
-    res.status(200).send('Message received');
+    res.status(200).send();
     smsIncoming(req.body)
     .then((anhRes) => { })
     .catch((err) => {
@@ -44,8 +43,6 @@ module.exports = function(app) {
   })
 
   app.all('/*', (req, res) => {
-    console.log('Requested route not found:');
-    console.log(req.url);
     res.sendFile(path.join(
       path.normalize(`${__dirname}/..`), 'client/index.html'
     ));
