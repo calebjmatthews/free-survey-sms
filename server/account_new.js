@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
-const client =
-  require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 const dbh = require('./db_handler').dbh;
+const sendAndUpdateMessage = require('./send_update_message');
 const utils = require('./utils');
 
 const FREE_MONTHLY_USAGE = 30;
@@ -108,23 +107,9 @@ function insertAndSendMessages(build, contacts, accountId) {
       values: [messageId, accountId, build.surveyId, contact.id, 'initiated',
         FROM_PHONE_NUMBER, contact.phone, text]
     }));
-    insPromises.push(sendAndUpdateMessage(contact, text, messageId));
+    insPromises.push(sendAndUpdateMessage(contact.phone, text, messageId));
   });
   return Promise.all(insPromises);
-}
-
-function sendAndUpdateMessage(contact, text, messageId) {
-  let twiMsg = { to: contact.phone, from: FROM_PHONE_NUMBER, body: text, };
-  return client.messages.create(twiMsg)
-  .then((message) => {
-    return dbh.pool.query({
-      sql: ('UPDATE `messages` SET `call_sid`=? WHERE `id`=?'),
-      values: [message.sid, messageId]
-    });
-  })
-  .catch((err) => {
-    console.error(err);
-  });
 }
 
 module.exports = accountNewHandle

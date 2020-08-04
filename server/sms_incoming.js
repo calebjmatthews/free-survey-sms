@@ -1,8 +1,13 @@
+const client =
+  require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 const dbh = require('./db_handler').dbh;
+const sendAndUpdateMessage = require('./send_update_message');
 const utils = require('./utils');
 
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
   'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+const FROM_PHONE_NUMBER = '+16692382810';
+const URL = 'lightningsurvey.xyz/';
 
 function smsIncoming(payload) {
   let surveyContact = null;
@@ -60,12 +65,37 @@ function smsIncoming(payload) {
       let letterRes = parseIncomingText(payload.Body, surveyOptions);
       if (letterRes.message == 'Valid') {
         let responseId = utils.randHex(8);
-        return dbh.pool.query({
-          sql: ('INSERT INTO `responses`(`id`, `account_id`, `survey_id`, `letter`) '
-            + 'VALUES (?, ?, ?, ?)'),
-          values: [responseId, surveyContact.account_id, surveyContact.survey_id,
-            letterRes.value]
-        });
+        let messageId = utils.randHex(8);
+        let responseSMS = survey.response;
+        if (survey.show_link == 1) {
+          responseSMS += (' ' + URL + survey.id);
+        }
+        return Promise.all([
+          dbh.pool.query({
+            sql: ('INSERT INTO `responses`(`id`, `account_id`, `survey_id`, `letter`) '
+              + 'VALUES (?, ?, ?, ?)'),
+            values: [responseId, surveyContact.account_id, surveyContact.survey_id,
+              letterRes.value]
+          }),
+          dbh.pool.query({
+            sql: ('INSERT INTO `messages`(`id`, `account_id`, `survey_id`, '
+              + '`contact_id`, `status`, `from`, `to`, `text`) '
+              + 'VALUES (?, ?, ?, ?, ?, ?, ?, ?)'),
+            values: [messageId, surveyContact.account_id, surveyContact.survey_id,
+              surveyContact.contact_id, 'initiated',
+              FROM_PHONE_NUMBER, payload.From, responseSMS]
+          }),
+          sendAndUpdateMessage(payload.From, responseSMS, messageId)
+        ]);
+      }
+      else if (letterRes.message == 'Not a survey option') {
+        notSurveyOptionRespond();
+      }
+      else if (letterRes.message == 'Not a letter') {
+        notLetterRespond();
+      }
+      else if (letterRes.message == 'More than one character') {
+        moreOneCharRespond();
       }
       else {
         return new Promise((resolve) => resolve(false));
@@ -90,6 +120,18 @@ function parseIncomingText(rawText, surveyOptions) {
 }
 
 function unknownNumberRespond() {
+  return new Promise((resolve) => resolve(null));
+}
+
+function notSurveyOptionRespond() {
+  return new Promise((resolve) => resolve(null));
+}
+
+function notLetterRespond() {
+  return new Promise((resolve) => resolve(null));
+}
+
+function moreOneCharRespond() {
   return new Promise((resolve) => resolve(null));
 }
 
