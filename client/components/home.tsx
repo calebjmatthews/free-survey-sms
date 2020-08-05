@@ -44,13 +44,7 @@ export default function Home() {
     if (contactsState.newContact.phone.length > 0) {
       contactsState.contacts[contactsState.newContact.id] = contactsState.newContact;
     }
-    console.log('signupState');
-    console.log(signupState);
-    console.log('contactsState');
-    console.log(contactsState);
-    console.log('buildState');
-    console.log(buildState);
-    axios.post('/account_new', {payload: JSON.stringify(
+    axios.post('/api/account_new', {payload: JSON.stringify(
       {signup: signupState, contacts: contactsState, build: buildState})
     }).then((res) => {
       console.log('res');
@@ -59,7 +53,7 @@ export default function Home() {
   }
 
   return (
-    <form className="home">
+    <form className="body">
       <div className="resp-container">
         <Explain />
       </div>

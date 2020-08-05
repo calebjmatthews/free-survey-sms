@@ -5,7 +5,7 @@ const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'
   'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 let highestLetter = 0;
 let emptyOptions: {[letter: string] : Option} = {};
-const url = 'https://lightningsurvey.xyz/';
+const URL = 'lightningsurvey.xyz/r/';
 
 export default function Build(props: {initState: {surveyId: string, opener: string,
   options: {[letter: string] : Option}, newOption: Option, response: string,
@@ -138,7 +138,7 @@ export default function Build(props: {initState: {surveyId: string, opener: stri
 
   function renderLink(surveyId: string) {
     if (showLink) {
-      return (<span>{url + surveyId}</span>);
+      return (<span>{URL + surveyId}</span>);
     }
     return null;
   }

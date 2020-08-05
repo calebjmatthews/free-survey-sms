@@ -7,7 +7,7 @@ const utils = require('./utils');
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
   'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 const FROM_PHONE_NUMBER = '+16692382810';
-const URL = 'lightningsurvey.xyz/';
+const URL = 'lightningsurvey.xyz/r/';
 
 function smsIncoming(payload) {
   let surveyContact = null;
@@ -72,10 +72,11 @@ function smsIncoming(payload) {
         }
         return Promise.all([
           dbh.pool.query({
-            sql: ('INSERT INTO `responses`(`id`, `account_id`, `survey_id`, `letter`) '
-              + 'VALUES (?, ?, ?, ?)'),
+            sql: ('INSERT INTO `responses`(`id`, `account_id`, `survey_id`, '
+              + '`contact_id`, `letter`) '
+              + 'VALUES (?, ?, ?, ?, ?)'),
             values: [responseId, surveyContact.account_id, surveyContact.survey_id,
-              letterRes.value]
+              surveyContact.contact_id, letterRes.value]
           }),
           dbh.pool.query({
             sql: ('INSERT INTO `messages`(`id`, `account_id`, `survey_id`, '

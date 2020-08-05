@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const accountNewHandle = require('./account_new');
 const smsIncoming = require('./sms_incoming');
+const getSurveyResults = require('./get_survey_results')
 
 module.exports = function(app) {
   app.use(bodyParser.urlencoded({ extended: true }));
@@ -22,7 +23,17 @@ module.exports = function(app) {
     path.normalize(`${__dirname}/..`), 'dist'
   )));
 
-  app.post('/account_new', (req, res) => {
+  app.get('/api/survey_results/:survey_id', (req, res) => {
+    getSurveyResults(req.params.survey_id)
+    .then((gsrRes) => {
+      res.status(200).send(JSON.stringify(gsrRes));
+    })
+    .catch((err) => {
+      console.error(err);
+    })
+  })
+
+  app.post('/api/account_new', (req, res) => {
     let payload = JSON.parse(req.body.payload);
     accountNewHandle(payload)
     .then((anhRes) => {
@@ -33,7 +44,7 @@ module.exports = function(app) {
     })
   })
 
-  app.post('/sms_incoming', (req, res) => {
+  app.post('/api/sms_incoming', (req, res) => {
     res.status(200).send();
     smsIncoming(req.body)
     .then((anhRes) => { })
