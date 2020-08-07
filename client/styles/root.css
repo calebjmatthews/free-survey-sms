@@ -176,6 +176,9 @@ body {
 .checkbox-group .input-label {
   cursor: pointer;
 }
+.invalid {
+  color: #F44336;
+}
 
 .survey-demo {
   display: flex;

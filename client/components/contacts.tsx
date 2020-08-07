@@ -5,7 +5,7 @@ import { utils } from '../utils';
 let emptyContacts: { [id: number] : Contact } = {};
 export default function Contacts(props: {initState:
   {contacts: { [id: number] : Contact }, newContact: Contact},
-  updateParent: Function}) {
+  updateParent: Function, invalid: string[]}) {
   const [contacts, setContacts] = useState(emptyContacts);
   function setContactField(value: any, fieldName: string, id: string) {
     setContacts((cts) => {
@@ -42,7 +42,13 @@ export default function Contacts(props: {initState:
 
   function changePhone(contact: Contact, ev: any) {
     let phone = ev.target.value;
-    setContactField(phone, 'phone', contact.id);
+    if (ev.target.value.length == 10) {
+      phone = utils.phoneNumberOut(phone);
+      setContactField(phone, 'phone', contact.id);
+    }
+    else if (ev.target.value.length != 15) {
+      setContactField(phone, 'phone', contact.id);
+    }
   }
 
   function changeName(contact: Contact, ev: any) {
@@ -52,12 +58,33 @@ export default function Contacts(props: {initState:
 
   function changeNewPhone(contact: Contact, ev: any) {
     let phone = ev.target.value;
-    setNewContactField(phone, 'phone');
+    if (ev.target.value.length == 10) {
+      phone = utils.phoneNumberOut(phone);
+      setNewContactField(phone, 'phone');
+    }
+    else if (ev.target.value.length != 15) {
+      setNewContactField(phone, 'phone');
+    }
   }
 
   function changeNewName(contact: Contact, ev: any) {
     let name = ev.target.value;
     setNewContactField(name, 'name');
+  }
+
+  function renderInvalid(fieldName: string) {
+    let invalidMessages = {
+      'no_contacts': 'Please add at least one contact',
+      'contact_phone': 'Please use a ten digit phone number'
+    }
+    let trueFieldName = fieldName;
+    if (fieldName.includes('|')) {
+      trueFieldName = fieldName.split('|')[0];
+    }
+    if (props.invalid.indexOf(fieldName) != -1) {
+      return (<div className="invalid">{invalidMessages[trueFieldName]}</div>);
+    }
+    return null;
   }
 
   return (
@@ -72,6 +99,7 @@ export default function Contacts(props: {initState:
           <div className="input-label">Phone number</div>
           <input type="tel" value={newContact.phone}
             onChange={(ev) => changeNewPhone(newContact, ev)} />
+          {renderInvalid('contact_phone|new')}
         </div>
         <div className="input-group resp-row-child">
           <div className="input-label">Name (optional)</div>
@@ -80,6 +108,7 @@ export default function Contacts(props: {initState:
         </div>
       </div>
       <div className="button" onClick={addContact}>Add row</div>
+      {renderInvalid('no_contacts')}
     </div>
   );
 
@@ -90,6 +119,7 @@ export default function Contacts(props: {initState:
           <div className="input-label">Phone number</div>
           <input type="tel" value={contact.phone}
             onChange={(ev) => changePhone(contact, ev)} />
+          {renderInvalid('contact_phone|' + contact.id)}
         </div>
         <div className="input-group resp-row-child">
           <div className="input-label">Name (optional)</div>

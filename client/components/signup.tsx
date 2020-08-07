@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 export default function Signup(props: {initState: {accountId: string, email: string,
-  password: string, confirm: string}, updateParent: Function}) {
+  password: string, confirm: string}, updateParent: Function, invalid: string[]}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -21,6 +21,18 @@ export default function Signup(props: {initState: {accountId: string, email: str
       password: password, confirm: confirm});
   })
 
+  function renderInvalid(fieldName: string) {
+    let invalidMessages = {
+      'email': 'Please enter an email address',
+      'password': 'Please enter a password of at least eight characters',
+      'confirm': 'Your password and its confirmation do not match'
+    }
+    if (props.invalid.indexOf(fieldName) != -1) {
+      return (<div className="invalid">{invalidMessages[fieldName]}</div>);
+    }
+    return null;
+  }
+
   return (
     <div className="signup">
       <h3>Quick sign-up:</h3>
@@ -29,14 +41,17 @@ export default function Signup(props: {initState: {accountId: string, email: str
           <div className="input-group">
             <div className="input-label">Email</div>
             <input type="email" value={email} onChange={changeEmail} />
+            {renderInvalid('email')}
           </div>
           <div className="input-group">
             <div className="input-label">Password</div>
             <input type="password" value={password} onChange={changePassword} />
+            {renderInvalid('password')}
           </div>
           <div className="input-group">
             <div className="input-label">Confirm password</div>
             <input type="password" value={confirm} onChange={changeConfirm} />
+            {renderInvalid('confirm')}
           </div>
         </div>
         <div className="resp-row-child">

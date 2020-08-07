@@ -1,4 +1,4 @@
-import React, { createRef } from 'react';
+import React, { useState } from 'react';
 const axios = require('axios').default;
 import Signup from './signup';
 import Contacts from './contacts';
@@ -9,6 +9,9 @@ import Contact from '../models/contact';
 import {utils} from '../utils';
 
 export default function Home() {
+  let emptyInvalid: string[] = []
+  const [invalid, setInvalid] = useState(emptyInvalid);
+
   let emptyContacts: { [id: number] : Contact } = {};
   let signupState = { accountId: utils.randHex(8), email: '', password: '',
     confirm: '' };
@@ -38,18 +41,76 @@ export default function Home() {
   }
 
   function submitSurvey() {
-    if (buildState.newOption.text.length > 0) {
-      buildState.options[buildState.newOption.letter] = buildState.newOption;
+    let newInvalid = checkInvalid();
+    console.log('newInvalid');
+    console.log(newInvalid);
+    setInvalid(newInvalid);
+    if (newInvalid.length == 0) {
+      if (buildState.newOption.text.length > 0) {
+        buildState.options[buildState.newOption.letter] = buildState.newOption;
+      }
+      if (contactsState.newContact.phone.length > 0) {
+        contactsState.contacts[contactsState.newContact.id] = contactsState.newContact;
+      }
+      axios.post('/api/account_new', {payload: JSON.stringify(
+        {signup: signupState, contacts: contactsState, build: buildState})
+      }).then((res) => {
+        console.log('res');
+        console.log(res);
+      });
     }
-    if (contactsState.newContact.phone.length > 0) {
-      contactsState.contacts[contactsState.newContact.id] = contactsState.newContact;
+  }
+
+  function checkInvalid() {
+    let invalid = [];
+    if (utils.isEmpty(signupState.email)) { invalid.push('email'); }
+    if (signupState.password.length < 8) { invalid.push('password'); }
+    if (signupState.confirm != signupState.password) { invalid.push('confirm'); }
+    if (Object.keys(contactsState.contacts).length == 0
+      && contactsState.newContact.phone.length == 0) {
+      invalid.push('no_contacts');
     }
-    axios.post('/api/account_new', {payload: JSON.stringify(
-      {signup: signupState, contacts: contactsState, build: buildState})
-    }).then((res) => {
-      console.log('res');
-      console.log(res);
-    })
+    else {
+      if (!utils.phoneNumberIn(contactsState.newContact.phone)) {
+        invalid.push('contact_phone|new');
+      }
+      Object.keys(contactsState.contacts).map((contactId) => {
+        let contact = contactsState.contacts[contactId]
+        if (!utils.phoneNumberIn(contact.phone)) {
+          invalid.push('contact_phone|' + contact.id);
+        }
+      })
+    }
+    return invalid;
+  }
+
+  function renderInvalid() {
+    let invalidMessages = {
+      'email': 'Please enter an email address',
+      'password': 'Please enter a password of at least eight characters',
+      'confirm': 'Your password and its confirmation do not match',
+      'no_contacts': 'Please add at least one contact',
+      'contact_phone': 'Please use a ten digit phone number'
+    }
+    if (invalid.length > 0) {
+      return (
+        <div className="invalid">
+          There is missing information in your survey:
+          <ul>
+            {invalid.map((fieldName) => {
+              let trueFieldName = fieldName;
+              if (fieldName.includes('|')) {
+                trueFieldName = fieldName.split('|')[0];
+              }
+              return (
+                <li key={fieldName}>{invalidMessages[trueFieldName]}</li>
+              );
+            })}
+          </ul>
+        </div>
+      );
+    }
+    return null;
   }
 
   return (
@@ -58,15 +119,18 @@ export default function Home() {
         <Explain />
       </div>
       <div className="resp-container">
-        <Signup initState={signupState} updateParent={updateSignupState} />
+        <Signup initState={signupState} updateParent={updateSignupState}
+          invalid={invalid} />
       </div>
       <div className="resp-container">
-        <Contacts initState={contactsState} updateParent={updateContactsState} />
+        <Contacts initState={contactsState} updateParent={updateContactsState}
+          invalid={invalid} />
       </div>
       <div className="resp-container">
         <Build initState={buildState} updateParent={updateBuildState} />
       </div>
       <div className="resp-container">
+        {renderInvalid()}
         <div className="button button-large" onClick={submitSurvey}>
           - Send the survey -
         </div>
