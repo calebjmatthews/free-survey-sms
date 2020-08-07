@@ -22,6 +22,8 @@ body {
 }
 
 .header-section {
+  display: flex;
+  align-items: center;
   font-size: 1.2em;
   letter-spacing: 0.1em;
   padding: 0.5em 1.5em;
@@ -35,6 +37,35 @@ body {
 .header-section.selected {
   background: #39516b;
   color: #f9f3eb;
+}
+.header-section img {
+  height: 60px;
+  margin-right: 0.5em;
+}
+.logo-container {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  border: 3px solid #446a90;
+  border-radius: 0.25em;
+  background: #fff;
+  box-shadow: 0 1px 3px 0px #27180038;
+}
+.logo-words {
+  display: flex;
+  flex-direction: column;
+  width: 3.5em;
+  font-weight: bold;
+  font-size: 1.3em;
+  line-height: 0.95;
+  letter-spacing: 0.125em;
+}
+.logo-word-one {
+  color: #446a90;
+}
+.logo-word-two {
+  color: #cea65c;
+  text-align: right;
 }
 
 .body {
@@ -82,7 +113,7 @@ body {
   margin-bottom: 1em;
   font-family: 'Manrope', sans-serif;
   text-align: center;
-  background: #39516a;
+  background: #446a90;
   color: #f9f3eb;
   border: none;
   border-radius: 0.25em;
@@ -90,7 +121,7 @@ body {
   cursor: pointer;
 }
 .button:hover {
-  background: #39516ac7;
+  background: #446a90c7;
 }
 .button.button-large {
   margin-bottom: unset;

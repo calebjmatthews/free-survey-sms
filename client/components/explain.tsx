@@ -31,7 +31,7 @@ export default function Explain() {
               B
             </div>
             <div className="demo-message incoming">
-              Thanks for your input! Here are the results from the survey so far: https://freesurveysms.io/qr93kl22
+              Thanks for your input! Here are the results from the survey so far: <a href="https://textpoll.app/r/qr93kl22">textpoll.app/r/qr93kl22</a>
             </div>
           </div>
         </div>

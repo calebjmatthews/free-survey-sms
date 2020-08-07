@@ -5,7 +5,7 @@ const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'
   'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 let highestLetter = 0;
 let emptyOptions: {[letter: string] : Option} = {};
-const URL = 'lightningsurvey.xyz/r/';
+const URL = 'textpoll.app/r/';
 
 export default function Build(props: {initState: {surveyId: string, opener: string,
   options: {[letter: string] : Option}, newOption: Option, response: string,

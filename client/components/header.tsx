@@ -1,31 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import HeaderSection from './header_section';
 
-const headerSectionNames = ['Free Survey SMS', 'Login'];
+const logo = require('../images/textpoll.png');
 
 export default function Header() {
-  const [currentSection, setCurrentSection] = useState('');
-
-  useEffect(() => {
-    let urlSuffix = document.URL.split('/')[-1] || '';
-    setCurrentSection(urlSuffix);
-  }, [document.URL])
+  function headerClick(name: string) {
+    let relativeUrl = '';
+    if (name != 'home') {
+      relativeUrl = name.toLowerCase();
+    }
+    location.assign('/' + relativeUrl);
+  }
 
   return (
     <div className="header">
-      {headerSectionNames.map((headerSectionName) => {
-        let selected = false;
-        if (headerSectionName.toLowerCase() == currentSection.toLowerCase()) {
-          selected = true;
-        }
-        else if (headerSectionName == 'Free Survey SMS' && currentSection.length == 0) {
-          selected = true;
-        }
-        return (
-          <HeaderSection key={headerSectionName} name={headerSectionName}
-            selected={selected} />
-        );
-      })}
+      <div className='header-section' onClick={() => {headerClick('home')}}>
+        <div className="logo-container">
+          <img src={logo.default} />
+          <div className="logo-words">
+            <div className="logo-word-one">Text</div>
+            <div className="logo-word-two">Poll</div>
+          </div>
+        </div>
+      </div>
+      <div className='header-section' onClick={() => {headerClick('login')}}>
+        Login
+      </div>
     </div>
   );
 }
