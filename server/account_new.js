@@ -5,17 +5,18 @@ const utils = require('./utils');
 
 const FREE_MONTHLY_USAGE = 30;
 const FROM_PHONE_NUMBER = '+16692382810';
+const URL = 'textpoll.app/r/';
 
 function accountNewHandle(payload) {
   return Promise.all([
     insertAccount(payload.signup, payload.signup.accountId),
-    insertUsage(payload.signup.accountId),
+    insertPositiveUsage(payload.signup.accountId),
     insertSurvey(payload.build, payload.signup.accountId, payload.build.surveyId),
     insertSurveyOptions(payload.build, payload.signup.accountId, payload.build.surveyId),
     insertSurveyContacts(payload.contacts, payload.signup.accountId,
       payload.build.surveyId),
     insertContacts(payload.contacts, payload.signup.accountId, payload.build.surveyId),
-    insertAndSendMessages(payload.build, payload.contacts, payload.signup.accountId)
+    checkUsageCoveredAndInsert(payload.build, payload.contacts, payload.signup.accountId)
   ]);
 }
 
@@ -29,7 +30,7 @@ function insertAccount(signup, accountId) {
   });
 }
 
-function insertUsage(accountId) {
+function insertPositiveUsage(accountId) {
   let usageId = utils.randHex(8);
   return dbh.pool.query({
     sql: ('INSERT INTO `usages`(`id`, `account_id`, `message_count`, '
@@ -126,6 +127,35 @@ function callSendAndUpdateMessages(contactIds, contacts, text, messageIds) {
   else {
     return true;
   }
+}
+
+function checkUsageCoveredAndInsert(build, contacts, accountId) {
+  let questionCharCount = build.opener.length;
+  Object.keys(build.options).map((letter) => {
+    questionCharCount += build.options[letter].text.length;
+  });
+  let usage = ((Math.ceil(questionCharCount / 160)
+    + Math.ceil(build.response.length / 160)) * Object.keys(contacts.contacts).length);
+
+  if (usage <= FREE_MONTHLY_USAGE) {
+    return Promise.all([
+      insertNegativeUsage(accountId, usage),
+      insertAndSendMessages(build, contacts)
+    ]);
+  }
+  else {
+    console.error('Calculated usage ' + usage + ' higher than free monthly credits');
+    return false;
+  }
+}
+
+function insertNegativeUsage(accountId, usage) {
+  let usageId = utils.randHex(8);
+  return dbh.pool.query({
+    sql: ('INSERT INTO `usages`(`id`, `account_id`, `message_count`, '
+      + '`direction`) VALUES (?, ?, ?, ?)'),
+    values: [usageId, accountId, usage, 'negative']
+  });
 }
 
 module.exports = accountNewHandle
