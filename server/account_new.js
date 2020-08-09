@@ -7,8 +7,6 @@ const FREE_MONTHLY_USAGE = 30;
 const FROM_PHONE_NUMBER = '+16692382810';
 
 function accountNewHandle(payload) {
-  console.log('payload');
-  console.log(payload);
   return Promise.all([
     insertAccount(payload.signup, payload.signup.accountId),
     insertUsage(payload.signup.accountId),
@@ -97,9 +95,11 @@ function insertAndSendMessages(build, contacts, accountId) {
     text += (option.letter + ') ' + option.text + ' ');
   });
   let insPromises = [];
+  let messageIds = {};
   Object.keys(contacts.contacts).map((id) => {
     let contact = contacts.contacts[id];
     let messageId = utils.randHex(8);
+    messageIds[id] = messageId;
     insPromises.push(dbh.pool.query({
       sql: ('INSERT INTO `messages`(`id`, `account_id`, `survey_id`, '
         + '`contact_id`, `status`, `from`, `to`, `text`) '
@@ -107,9 +107,25 @@ function insertAndSendMessages(build, contacts, accountId) {
       values: [messageId, accountId, build.surveyId, contact.id, 'initiated',
         FROM_PHONE_NUMBER, contact.phone, text]
     }));
-    insPromises.push(sendAndUpdateMessage(contact.phone, text, messageId));
   });
-  return Promise.all(insPromises);
+  return Promise.all(insPromises)
+  .then((res) => {
+    let contactIds = Object.keys(contacts.contacts);
+    return callSendAndUpdateMessages(contactIds, contacts.contacts, text, messageIds);
+  });
+}
+
+function callSendAndUpdateMessages(contactIds, contacts, text, messageIds) {
+  if (contactIds.length > 0) {
+    let contact = contacts[contactIds[0]];
+    return sendAndUpdateMessage(contact.phone, text, messageIds[contactIds[0]])
+    .then(() => {
+      return callSendAndUpdateMessages(contactIds.slice(1), contacts, text, messageIds)
+    });
+  }
+  else {
+    return true;
+  }
 }
 
 module.exports = accountNewHandle
