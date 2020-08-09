@@ -81,6 +81,14 @@ export default function Home() {
         }
       })
     }
+    if (utils.isEmpty(buildState.opener)) { invalid.push('opener'); }
+    if (Object.keys(buildState.options).length == 0) { invalid.push('no_options'); }
+    Object.keys(buildState.options).map((letter) => {
+      if (utils.isEmpty(buildState.options[letter].text)) {
+        invalid.push('option|' + letter);
+      }
+    })
+    if (utils.isEmpty(buildState.response)) { invalid.push('response'); }
     return invalid;
   }
 
@@ -90,7 +98,11 @@ export default function Home() {
       'password': 'Please enter a password of at least eight characters',
       'confirm': 'Your password and its confirmation do not match',
       'no_contacts': 'Please add at least one contact',
-      'contact_phone': 'Please use a ten digit phone number'
+      'contact_phone': 'Please use a ten digit phone number',
+      'opener': 'Please add an opening message and question',
+      'no_options': 'Please add at least two survey options',
+      'option': 'Please add the text for the option',
+      'response': 'Please add the automated response to a survey answer'
     }
     if (invalid.length > 0) {
       return (
@@ -127,7 +139,8 @@ export default function Home() {
           invalid={invalid} />
       </div>
       <div className="resp-container">
-        <Build initState={buildState} updateParent={updateBuildState} />
+        <Build initState={buildState} updateParent={updateBuildState}
+          invalid={invalid} />
       </div>
       <div className="resp-container">
         {renderInvalid()}

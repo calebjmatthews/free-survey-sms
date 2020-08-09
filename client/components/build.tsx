@@ -9,7 +9,7 @@ const URL = 'textpoll.app/r/';
 
 export default function Build(props: {initState: {surveyId: string, opener: string,
   options: {[letter: string] : Option}, newOption: Option, response: string,
-  showLink: boolean}, updateParent: Function}) {
+  showLink: boolean}, updateParent: Function, invalid: string[]}) {
   const [opener, setOpener] = useState(props.initState.opener);
   const [options, setOptions] = useState(props.initState.options);
   const [newOption, setNewOption] = useState(props.initState.newOption);
@@ -45,6 +45,14 @@ export default function Build(props: {initState: {surveyId: string, opener: stri
       options: options, newOption: newOption, response: response, showLink: showLink});
   })
 
+  function clearBuild() {
+    setOpener('');
+    setNewOption(new Option({letter: 'A', text: ''}));
+    setOptions({});
+    setResponse('');
+    setShowLink(true);
+  }
+
   function addOption() {
     setOptions((os) => {
       let updOptions = os;
@@ -66,14 +74,33 @@ export default function Build(props: {initState: {surveyId: string, opener: stri
     setShowLink(!showLink)
   }
 
+  function renderInvalid(fieldName: string) {
+    let invalidMessages = {
+      'opener': 'Please add an opening message and question',
+      'no_options': 'Please add at least two survey options',
+      'option': 'Please add the text for the option',
+      'response': 'Please add the automated response to a survey answer'
+    }
+    let trueFieldName = fieldName;
+    if (fieldName.includes('|')) {
+      trueFieldName = fieldName.split('|')[0];
+    }
+    if (props.invalid.indexOf(fieldName) != -1) {
+      return (<div className="invalid">{invalidMessages[trueFieldName]}</div>);
+    }
+    return null;
+  }
+
   return (
     <div className="build">
       <h3>Build the survey:</h3>
       <div className="resp-row">
         <div className="resp-row-child">
+          <div className="button" onClick={clearBuild}>Clear example survey</div>
           <div className="input-group">
             <div className="input-label">Opener</div>
             <textarea rows={3} value={opener} onChange={changeOpener} />
+            {renderInvalid('opener')}
           </div>
           {Object.keys(options).map((letter) => {
             let option = options[letter];
@@ -83,11 +110,13 @@ export default function Build(props: {initState: {surveyId: string, opener: stri
             <div className="input-label">Option {newOption.letter}</div>
             <textarea rows={1} value={newOption.text}
               onChange={(ev) => changeNewOption(ev)} />
+            {renderInvalid('no_options')}
           </div>
           <div className="button" onClick={addOption}>Add option</div>
           <div className="input-group">
             <div className="input-label">Response</div>
             <textarea rows={3} value={response} onChange={changeResponse} />
+            {renderInvalid('response')}
           </div>
           <div className="checkbox-group">
             <input type="checkbox" checked={showLink} onChange={toggleShowLink} />
@@ -132,6 +161,7 @@ export default function Build(props: {initState: {surveyId: string, opener: stri
         <div className="input-label">Option {option.letter}</div>
         <textarea rows={1} value={option.text}
           onChange={(ev) => changeOption(option, ev)} />
+        {renderInvalid('option|' + option.letter)}
       </div>
     );
   }
