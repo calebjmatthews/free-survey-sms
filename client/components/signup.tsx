@@ -66,7 +66,9 @@ export default function Signup(props: {initState: {accountId: string, phone: str
           </div>
         </div>
         <div className="resp-row-child">
-          You'll use this phone number and password to see the final results of your survey.
+          <div className="info-box">
+            You'll use this phone number and password to see the final results of your survey.
+          </div>
         </div>
       </div>
     </div>

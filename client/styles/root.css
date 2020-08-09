@@ -130,6 +130,13 @@ body {
   padding: 1em;
 }
 
+.info-box {
+  margin: 2em;
+  padding: 0.25em 0.5em;
+  border: 1px dashed #d8bea0;
+  border-radius: 0.5em;
+}
+
 .icon-button {
   display: flex;
   justify-content: center;
@@ -261,6 +268,10 @@ tr:nth-child(even) {
 }
 th, td {
   padding: 2px 8px;
+}
+
+.svg-inline--fa {
+  color: #446a90;
 }
 
 @media (max-width:767px) {

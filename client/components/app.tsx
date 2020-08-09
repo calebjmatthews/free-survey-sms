@@ -5,7 +5,10 @@ import Header from './header';
 import Home from './home';
 import Results from './results';
 
+import FASetup from '../models/fa_setup';
+
 export default function App() {
+  let faSetup = new FASetup();
   return (
     <BrowserRouter>
       <div className="app">

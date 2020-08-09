@@ -6,11 +6,13 @@ import Build from './build';
 import Explain from './explain';
 import Option from '../models/option';
 import Contact from '../models/contact';
+import SMSCount from '../models/sms_count';
 import {utils} from '../utils';
 
 export default function Home() {
   let emptyInvalid: string[] = []
   const [invalid, setInvalid] = useState(emptyInvalid);
+  const [numContacts, setNumContacts] = useState(0);
 
   let emptyContacts: { [id: number] : Contact } = {};
   let signupState = { accountId: utils.randHex(8), phone: '', password: '',
@@ -27,13 +29,19 @@ export default function Home() {
     options: newOptions,
     newOption: new Option({ letter: 'D', text: '' }),
     response: ('Thanks for your input! Here are the results from the survey so far: '),
-    showLink: true
+    showLink: true,
+    smsCount: new SMSCount({question: 1, response: 1, contacts: 1, total: 2})
   };
 
   function updateSignupState(newState: any) {
     signupState = newState;
   }
   function updateContactsState(newState: any) {
+    let newNumContacts = Object.keys(newState.contacts).length;
+    if (!utils.isEmpty(newState.newContact.phone)) {
+      newNumContacts++;
+    }
+    setNumContacts(newNumContacts);
     contactsState = newState;
   }
   function updateBuildState(newState: any) {
@@ -42,8 +50,6 @@ export default function Home() {
 
   function submitSurvey() {
     let newInvalid = checkInvalid();
-    console.log('newInvalid');
-    console.log(newInvalid);
     setInvalid(newInvalid);
     if (newInvalid.length == 0) {
       signupState.phone = utils.phoneNumberIn(signupState.phone);
@@ -145,7 +151,7 @@ export default function Home() {
       </div>
       <div className="resp-container">
         <Build initState={buildState} updateParent={updateBuildState}
-          invalid={invalid} />
+          invalid={invalid} numContacts={numContacts} />
       </div>
       <div className="resp-container">
         {renderInvalid()}

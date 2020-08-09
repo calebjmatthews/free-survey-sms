@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Option from '../models/option';
+import SMSCount from '../models/sms_count';
 
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
   'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
@@ -9,12 +11,14 @@ const URL = 'textpoll.app/r/';
 
 export default function Build(props: {initState: {surveyId: string, opener: string,
   options: {[letter: string] : Option}, newOption: Option, response: string,
-  showLink: boolean}, updateParent: Function, invalid: string[]}) {
+  showLink: boolean, smsCount: SMSCount}, updateParent: Function, invalid: string[],
+  numContacts: number}) {
   const [opener, setOpener] = useState(props.initState.opener);
   const [options, setOptions] = useState(props.initState.options);
   const [newOption, setNewOption] = useState(props.initState.newOption);
   const [response, setResponse] = useState(props.initState.response);
   const [showLink, setShowLink] = useState(props.initState.showLink);
+  const [smsCount, setSMSCount] = useState(props.initState.smsCount);
 
   function changeOpener(ev: any) {
     setOpener(ev.target.value);
@@ -41,8 +45,26 @@ export default function Build(props: {initState: {surveyId: string, opener: stri
   }
 
   useEffect(() => {
+    let questionCharCount = opener.length;
+    questionCharCount += newOption.text.length;
+    Object.keys(options).map((letter) => {
+      questionCharCount += options[letter].text.length;
+    });
+    let responseCharCount = response.length;
+    if (showLink) { responseCharCount += (URL.length + 8); }
+    setSMSCount(new SMSCount({
+      question: Math.ceil(questionCharCount / 160),
+      response: Math.ceil(responseCharCount / 160),
+      contacts: props.numContacts,
+      total: ((Math.ceil(questionCharCount / 160) + Math.ceil(response.length / 160))
+        * props.numContacts)
+    }))
+  }, [opener, options, newOption, response, showLink, props.numContacts]);
+
+  useEffect(() => {
     props.updateParent({surveyId: props.initState.surveyId, opener: opener,
-      options: options, newOption: newOption, response: response, showLink: showLink});
+      options: options, newOption: newOption, response: response, showLink: showLink,
+      smsCount: smsCount});
   })
 
   function clearBuild() {
@@ -148,6 +170,25 @@ export default function Build(props: {initState: {surveyId: string, opener: stri
             <div className="demo-message incoming">
               {response + ' '}
               {renderLink(props.initState.surveyId)}
+            </div>
+          </div>
+          <div className="info-box">
+            <div>
+              You have 30 free <FontAwesomeIcon icon="envelope" />!
+            </div>
+            <div>
+              This survey will use {smsCount.total} <FontAwesomeIcon icon="envelope" />:
+              <ul>
+                <li>
+                  Question {smsCount.question} <FontAwesomeIcon icon="envelope" />
+                </li>
+                <li>
+                  +Response {smsCount.response} <FontAwesomeIcon icon="envelope" />
+                </li>
+                <li>
+                  x{smsCount.contacts} Contacts
+                </li>
+              </ul>
             </div>
           </div>
         </div>
