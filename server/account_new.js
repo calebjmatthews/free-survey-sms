@@ -23,9 +23,9 @@ function accountNewHandle(payload) {
 
 function insertAccount(signup, accountId) {
   return dbh.pool.query({
-    sql: ('INSERT INTO `accounts`(`id`, `email`, `password`, '
+    sql: ('INSERT INTO `accounts`(`id`, `phone`, `password`, '
       + '`last_free_credit`) VALUES (?, ?, ?, ?)'),
-    values: [accountId, signup.email,
+    values: [accountId, signup.phone,
       bcrypt.hashSync(signup.password, bcrypt.genSaltSync(8), null),
       utils.getDateString(new Date(Date.now()))]
   });

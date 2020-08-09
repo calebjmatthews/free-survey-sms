@@ -26,7 +26,7 @@ DROP TABLE IF EXISTS `accounts`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `accounts` (
   `id` varchar(8) NOT NULL,
-  `email` varchar(255) NOT NULL,
+  `phone` varchar(32) NOT NULL,
   `password` varchar(255) NOT NULL,
   `registered_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_free_credit` date DEFAULT NULL,

@@ -3,7 +3,7 @@ scp -i newsummer -r /Users/calebmatthews/free-survey-sms-deploy cmatthews@104.13
 
 Necessary tables
 ----------------
-- accounts: id, email, password, registered_at, last_free_credit
+- accounts: id, phone, password, registered_at, last_free_credit
 - usage: id, account_id, timestamp, message_count, direction
 - surveys: id, account_id, active, timestamp, opener, response, show_link
 - survey_options: id, account_id, survey_id, letter, text
@@ -15,7 +15,7 @@ Necessary tables
 Page submission for new account
 -------------------------------
 - Send from client side:
-  - New account w/ email and password
+  - New account w/ phone number and password
   - Calculate usage, forbid surveys which exceed 30 total messages = (#messages in question + #)
   - New survey with generated id
   - Survey option set with survey id
@@ -46,7 +46,7 @@ Viewing results page
 New survey for existing account
 -------------------------------
 - Pull for page load:
-  - Account (based on email + password)
+  - Account (based on phone + password)
   - Usage so far, showing remaining free messages
   - Existing contacts, filling out contacts list with status "existing"
 - Send from client side:

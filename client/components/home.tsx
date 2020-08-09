@@ -13,7 +13,7 @@ export default function Home() {
   const [invalid, setInvalid] = useState(emptyInvalid);
 
   let emptyContacts: { [id: number] : Contact } = {};
-  let signupState = { accountId: utils.randHex(8), email: '', password: '',
+  let signupState = { accountId: utils.randHex(8), phone: '', password: '',
     confirm: '' };
   let contactsState = { contacts: emptyContacts,
     newContact: new Contact({ id: utils.randHex(8), phone: '', name: '' }) };
@@ -63,7 +63,7 @@ export default function Home() {
 
   function checkInvalid() {
     let invalid = [];
-    if (utils.isEmpty(signupState.email)) { invalid.push('email'); }
+    if (utils.isEmpty(signupState.phone)) { invalid.push('phone'); }
     if (signupState.password.length < 8) { invalid.push('password'); }
     if (signupState.confirm != signupState.password) { invalid.push('confirm'); }
     if (Object.keys(contactsState.contacts).length == 0
@@ -94,7 +94,7 @@ export default function Home() {
 
   function renderInvalid() {
     let invalidMessages = {
-      'email': 'Please enter an email address',
+      'phone': 'Please enter a phone number',
       'password': 'Please enter a password of at least eight characters',
       'confirm': 'Your password and its confirmation do not match',
       'no_contacts': 'Please add at least one contact',

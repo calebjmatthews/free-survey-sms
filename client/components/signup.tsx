@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import { utils } from '../utils';
 
-export default function Signup(props: {initState: {accountId: string, email: string,
+export default function Signup(props: {initState: {accountId: string, phone: string,
   password: string, confirm: string}, updateParent: Function, invalid: string[]}) {
-  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
 
-  function changeEmail(ev: any) {
-    setEmail(ev.target.value);
+  function changePhone(ev: any) {
+    let phone = ev.target.value;
+    if (ev.target.value.length == 10) {
+      phone = utils.phoneNumberOut(phone);
+      setPhone(phone);
+    }
+    else if (ev.target.value.length != 15) {
+      setPhone(phone);
+    }
   }
   function changePassword(ev: any) {
     setPassword(ev.target.value);
@@ -17,13 +25,13 @@ export default function Signup(props: {initState: {accountId: string, email: str
   }
 
   useEffect(() => {
-    props.updateParent({accountId: props.initState.accountId, email: email,
+    props.updateParent({accountId: props.initState.accountId, phone: phone,
       password: password, confirm: confirm});
   })
 
   function renderInvalid(fieldName: string) {
     let invalidMessages = {
-      'email': 'Please enter an email address',
+      'phone': 'Please enter a phone number',
       'password': 'Please enter a password of at least eight characters',
       'confirm': 'Your password and its confirmation do not match'
     }
@@ -39,23 +47,26 @@ export default function Signup(props: {initState: {accountId: string, email: str
       <div className="resp-row">
         <div className="resp-row-child">
           <div className="input-group">
-            <div className="input-label">Email</div>
-            <input type="email" value={email} onChange={changeEmail} />
-            {renderInvalid('email')}
+            <div className="input-label">Phone</div>
+            <input type="tel" value={phone} onChange={changePhone}
+              autoComplete="tel" />
+            {renderInvalid('phone')}
           </div>
           <div className="input-group">
             <div className="input-label">Password</div>
-            <input type="password" value={password} onChange={changePassword} />
+            <input type="password" value={password} onChange={changePassword}
+              autoComplete="new-password" />
             {renderInvalid('password')}
           </div>
           <div className="input-group">
             <div className="input-label">Confirm password</div>
-            <input type="password" value={confirm} onChange={changeConfirm} />
+            <input type="password" value={confirm} onChange={changeConfirm}
+              autoComplete="new-password" />
             {renderInvalid('confirm')}
           </div>
         </div>
         <div className="resp-row-child">
-          You'll use this email and password to see the final results of your survey.
+          You'll use this phone number and password to see the final results of your survey.
         </div>
       </div>
     </div>
