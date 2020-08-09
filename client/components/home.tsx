@@ -46,12 +46,17 @@ export default function Home() {
     console.log(newInvalid);
     setInvalid(newInvalid);
     if (newInvalid.length == 0) {
+      signupState.phone = utils.phoneNumberIn(signupState.phone);
       if (buildState.newOption.text.length > 0) {
         buildState.options[buildState.newOption.letter] = buildState.newOption;
       }
       if (contactsState.newContact.phone.length > 0) {
         contactsState.contacts[contactsState.newContact.id] = contactsState.newContact;
       }
+      Object.keys(contactsState.contacts).map((contactId) => {
+        let contact: Contact = contactsState.contacts[contactId];
+        contact.phone = utils.phoneNumberIn(contact.phone);
+      });
       axios.post('/api/account_new', {payload: JSON.stringify(
         {signup: signupState, contacts: contactsState, build: buildState})
       }).then((res) => {
