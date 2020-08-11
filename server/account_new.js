@@ -103,10 +103,10 @@ function insertAndSendMessages(build, contacts, accountId) {
     messageIds[id] = messageId;
     insPromises.push(dbh.pool.query({
       sql: ('INSERT INTO `messages`(`id`, `account_id`, `survey_id`, '
-        + '`contact_id`, `status`, `from`, `to`, `text`) '
-        + 'VALUES (?, ?, ?, ?, ?, ?, ?, ?)'),
+        + '`contact_id`, `status`, `from`, `to`, `direction`, `text`) '
+        + 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'),
       values: [messageId, accountId, build.surveyId, contact.id, 'initiated',
-        FROM_PHONE_NUMBER, contact.phone, text]
+        FROM_PHONE_NUMBER, contact.phone, 'outgoing', text]
     }));
   });
   return Promise.all(insPromises)
