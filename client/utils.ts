@@ -32,6 +32,27 @@ class Utils {
     return dateString;
   }
 
+  getTimeString(date: Date) {
+    let timeString = '';
+    let ampm = 'am';
+    if (date.getHours() > 12) {
+      ampm = 'pm';
+      timeString += (date.getHours() - 12) + ':';
+    }
+    else {
+      timeString += date.getHours() + ':';
+    }
+
+    if (date.getMinutes() >= 10) {
+      timeString += date.getMinutes();
+    }
+    else {
+      timeString += ('0' + date.getMinutes());
+    }
+    timeString += ampm;
+    return timeString;
+  }
+
   isEmpty(aValue: any) {
     if (aValue) {
       if (typeof aValue == 'string') {
@@ -78,6 +99,13 @@ class Utils {
     else {
       return rawNum;
     }
+  }
+
+  upperCaseFirst(aString: string) {
+    if (aString) {
+      return aString.slice(0, 1).toUpperCase() + aString.slice(1);
+    }
+    return null;
   }
 }
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 const axios = require('axios').default;
+import { utils } from '../utils';
 
 export default function MessageResults() {
   let initData: any = {status: 'init'};
@@ -10,17 +11,22 @@ export default function MessageResults() {
       return;
     }
     let surveyId = window.location.pathname.slice(10);
-    console.log('surveyId');
-    console.log(surveyId);
     axios.get('/api/message_results/' + surveyId)
     .then((res) => {
       if (res.data) {
-        console.log('res.data');
-        console.log(res.data);
         let newData: any = res.data;
         newData.messageMap = {};
         newData.messages.map((message) => {
-
+          if (message.direction == 'outgoing') {
+            newData.messageMap[message.contact_id] = message;
+          }
+        });
+        newData.responseMap = {};
+        // Responses are sorted with newest responses first, so that this mapping
+        //  function will store the oldest reponse. Responses after the initial
+        //  response are ignored.
+        newData.responses.map((response) => {
+          newData.responseMap[response.contact_id] = response;
         });
         newData.status = 'finished';
         setData(newData);
@@ -74,12 +80,23 @@ export default function MessageResults() {
           </thead>
           <tbody>
             {data.contacts.map((contact, index) => {
+              let message = data.messageMap[contact.id];
+              let response = data.responseMap[contact.id];
+              let status = 'missing';
+              if (message) { status = message.status; }
+              let timestamp = null;
+              if (response) {
+                status = 'responded';
+                let tDate = new Date(response.timestamp);
+                timestamp = utils.getDateString(tDate) + ' '
+                  + utils.getTimeString(tDate);
+              }
               return (
                 <tr key={index}>
-                  <td>{contact.phone}</td>
+                  <td>{utils.phoneNumberOut(contact.phone)}</td>
                   <td>{contact.name}</td>
-                  <td>{}</td>
-                  <td>{}</td>
+                  <td>{(message) ? utils.upperCaseFirst(status) : ''}</td>
+                  <td>{(timestamp) ? timestamp : ''}</td>
                 </tr>
               );
             })}

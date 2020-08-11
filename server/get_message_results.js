@@ -20,7 +20,7 @@ function getMessageResults(surveyId) {
       values: [surveyId]
     }),
     dbh.pool.query({
-      sql: ('SELECT * FROM `responses` WHERE `survey_id`=?'),
+      sql: ('SELECT * FROM `responses` WHERE `survey_id`=? ORDER BY `timestamp` DESC'),
       values: [surveyId]
     })
   ])
