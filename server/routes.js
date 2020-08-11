@@ -5,7 +5,8 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const accountNewHandle = require('./account_new');
 const smsIncoming = require('./sms_incoming');
-const getSurveyResults = require('./get_survey_results')
+const getSurveyResults = require('./get_survey_results');
+const getMessageResults = require('./get_message_results');
 
 module.exports = function(app) {
   app.use(bodyParser.urlencoded({ extended: true }));
@@ -27,6 +28,16 @@ module.exports = function(app) {
     getSurveyResults(req.params.survey_id)
     .then((gsrRes) => {
       res.status(200).send(JSON.stringify(gsrRes));
+    })
+    .catch((err) => {
+      console.error(err);
+    })
+  })
+
+  app.get('/api/message_results/:survey_id', (req, res) => {
+    getMessageResults(req.params.survey_id)
+    .then((gmrRes) => {
+      res.status(200).send(JSON.stringify(gmrRes));
     })
     .catch((err) => {
       console.error(err);

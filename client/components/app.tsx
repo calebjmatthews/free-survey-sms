@@ -4,6 +4,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Header from './header';
 import Home from './home';
 import Results from './results';
+import MessageResults from './message_results';
 
 import FASetup from '../models/fa_setup';
 
@@ -17,6 +18,9 @@ export default function App() {
           <Switch>
             <Route path="/r/:surveyId">
               <Results />
+            </Route>
+            <Route path="/messages/:surveyId">
+              <MessageResults />
             </Route>
             <Route path="/">
               <Home />
