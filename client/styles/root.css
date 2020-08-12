@@ -274,6 +274,11 @@ th, td {
   color: #446a90;
 }
 
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
 @media (max-width:767px) {
   .resp-container {
     margin: 5% auto;

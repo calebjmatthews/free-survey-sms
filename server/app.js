@@ -2,8 +2,10 @@ const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 require('dotenv-safe').config();
+const configurePassport = require('./passport');
 const setRoutes = require('./routes');
 
+configurePassport();
 setRoutes(app);
 
 if (module === require.main) {

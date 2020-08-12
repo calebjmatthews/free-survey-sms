@@ -60,3 +60,14 @@ New survey for existing account
   - Insert usage, survey, survey options, survey contacts, and perform contact changes
   - Send survey sms to each survey contact
   - Insert message in messages table, record Twilio call_sid and status
+
+Login
+-----
+- Enter phone number and password
+  - User info stored in local storage
+- If password is forgotten:
+  - Enter phone number
+  - Send password recovery text to phone number
+  - Code is entered to login
+  - Mandatory password change
+- After logged in, "Login" changes to "Current/Past Surveys"

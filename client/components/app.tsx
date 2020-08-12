@@ -3,6 +3,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import Header from './header';
 import Home from './home';
+import Login from './login';
 import Results from './results';
 import MessageResults from './message_results';
 
@@ -16,6 +17,9 @@ export default function App() {
         <div className="main">
           <Header />
           <Switch>
+            <Route path="/login">
+              <Login />
+            </Route>
             <Route path="/r/:surveyId">
               <Results />
             </Route>
