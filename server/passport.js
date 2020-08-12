@@ -4,6 +4,7 @@ const RememberMeStrategy = require('passport-remember-me').Strategy;
 const bcrypt = require('bcrypt');
 
 const dbh = require('./db_handler').dbh;
+const utils = require('./utils');
 
 module.exports = function() {
   function consumeRememberMeToken(token, callback) {
@@ -63,7 +64,8 @@ module.exports = function() {
           }
           else { return done(null, false, { message: 'Invalid password' }) }
         }
-        else { done(null, false, {message: 'No matching account for: ' + username }); }
+        else { done(null, false, {message: 'No matching account for: '
+          + utils.phoneNumberOut(username) }); }
       })
       .catch((err) => { console.error(err); done(err); });
     }

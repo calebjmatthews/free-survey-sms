@@ -49,12 +49,16 @@ module.exports = function(app) {
       req.logIn(account, function(err) {
         if (err) { return next(err); }
         // Issue a remember me cookie if the option was checked
-        if (!req.body.remember_me) { return res.status(200).send(); }
+        if (!req.body.remember_me) {
+            console.log('req.body');
+          console.log(req.body);
+          return res.status(200).send({message: 'Success', account: account});
+        }
 
-        issueToken(req.body.account, function(err, token) {
+        issueToken(account, function(err, token) {
           if (err) { return next(err); }
           res.cookie('remember_me', token, { path: '/', httpOnly: true, maxAge: 604800000 });
-          return res.status(200).send();
+          return res.status(200).send({message: 'Success', account: req.body.account});
         });
 
       });

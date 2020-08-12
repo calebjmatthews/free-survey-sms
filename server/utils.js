@@ -31,6 +31,39 @@ class Utils {
     }
     return dateString;
   }
+
+  // Take in a string of various format and output an internationally formatted string
+  phoneNumberIn(rawNum) {
+    if (!rawNum) { return null; }
+    if (rawNum.slice(0,1) == '+') {
+      return rawNum;
+    }
+    // ex: John Doe (303) 555-5309 -> 3035555309
+    let formatNum = new String(rawNum).replace(/\D/g,'');
+    // ex: 3035555309 -> +13035555309
+    if (formatNum.length == 10) {
+      return '+1' + formatNum.valueOf();
+    }
+    else if ((formatNum.length == 11) && (formatNum.slice(0,1) == '1')) {
+      return '+' + formatNum.valueOf();
+    }
+    else { return null; }
+  }
+
+  // Take an internationally formatted phone number string and output a human-friendly
+  // ex: +13038675309 -> (303) 867-5309
+  phoneNumberOut(rawNum) {
+    let formatNum = this.phoneNumberIn(rawNum);
+    if (formatNum == null) { return ''; }
+    if (formatNum.length == 0) { return ''; }
+    if (formatNum.length == 12) {
+      return '(' + formatNum.slice(2,5) + ') ' + formatNum.slice(5,8)
+        + '-' + formatNum.slice(8,12);
+    }
+    else {
+      return rawNum;
+    }
+  }
 }
 
 let utils = new Utils();
