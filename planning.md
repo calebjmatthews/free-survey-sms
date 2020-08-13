@@ -70,4 +70,4 @@ Login
   - Send password recovery text to phone number
   - Code is entered to login
   - Mandatory password change
-- After logged in, "Login" changes to "Current/Past Surveys"
+- After logged in, "Login" changes to "Account"

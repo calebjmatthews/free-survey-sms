@@ -6,36 +6,7 @@ const bcrypt = require('bcrypt');
 const dbh = require('./db_handler').dbh;
 const utils = require('./utils');
 
-module.exports = function() {
-  function consumeRememberMeToken(token, callback) {
-    return dbh.pool.query({
-      sql: ('SELECT * FROM `tokens` WHERE `token`=?'), values: [token]
-    })
-    .then((tokensRes) => {
-      if (tokensRes.length > 0) {
-        dbh.pool.query({
-          sql: ('DELETE FROM `tokens` WHERE `token`=?'), values: [token]
-        });
-        return callback(null, tokensRes[0].account_id);
-      }
-      else { return callback(null, false); }
-    })
-    .catch((err) => { console.error(err); return callback(err); });
-  }
-  function saveRememberMeToken(token, accountId, callback) {
-    dbh.pool.query({
-      sql: ('INSERT INTO `tokens` VALUES (?, ?)'), values: [token, accountId]
-    });
-    return callback();
-  }
-  function issueToken(account, done) {
-    var token = utils.randHex(64);
-    saveRememberMeToken(token, account.id, function(err) {
-      if (err) { return done(err); }
-      return done(null, token);
-    });
-  }
-
+function configurePassport() {
   passport.serializeUser(function(account, done) {
     done(null, account.id);
   });
@@ -92,3 +63,39 @@ module.exports = function() {
     issueToken
   ));
 }
+
+function consumeRememberMeToken(token, callback) {
+  return dbh.pool.query({
+    sql: ('SELECT * FROM `tokens` WHERE `token`=?'), values: [token]
+  })
+  .then((tokensRes) => {
+    if (tokensRes.length > 0) {
+      dbh.pool.query({
+        sql: ('DELETE FROM `tokens` WHERE `token`=?'), values: [token]
+      });
+      return callback(null, tokensRes[0].account_id);
+    }
+    else { return callback(null, false); }
+  })
+  .catch((err) => { console.error(err); return callback(err); });
+}
+
+function saveRememberMeToken(token, accountId, callback) {
+  dbh.pool.query({
+    sql: ('INSERT INTO `tokens`(`token`, `account_id`) '
+      + 'VALUES (?, ?)'), values: [token, accountId]
+  })
+  .then(() => {})
+  .catch((err) => console.error(err));
+  return callback();
+}
+
+function issueToken(account, done) {
+  var token = utils.randHex(64);
+  saveRememberMeToken(token, account.id, function(err) {
+    if (err) { return done(err); }
+    return done(null, token);
+  });
+}
+
+module.exports = { configurePassport, issueToken }

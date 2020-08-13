@@ -5,6 +5,7 @@ import { utils } from '../utils';
 export default function Login() {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(true);
   let noErrorMessage: string = null;
   const [errorMessage, setErrorMessage] = useState(noErrorMessage);
 
@@ -22,11 +23,15 @@ export default function Login() {
     setPassword(ev.target.value);
   }
 
+  function toggleRememberMe(ev: any) {
+    setRememberMe(!rememberMe);
+  }
+
   function loginSubmit(ev: SyntheticEvent) {
     ev.preventDefault();
     let inPhone = utils.phoneNumberIn(phone);
 
-    axios.post('/login', {username: inPhone, password: password
+    axios.post('/login', {username: inPhone, password: password, remember_me: rememberMe
     }).then((res) => {
       try {
         switch(res.data.message) {
@@ -67,6 +72,12 @@ export default function Login() {
             <div className="input-label">Password</div>
             <input type="password" value={password} onChange={changePassword}
               autoComplete="password" />
+          </div>
+          <div className="checkbox-group">
+            <input type="checkbox" checked={rememberMe} onChange={toggleRememberMe} />
+            <div className="input-label" onClick={toggleRememberMe}>
+              Keep me logged in on this device
+            </div>
           </div>
           {renderError()}
           <button className="button">Go</button>

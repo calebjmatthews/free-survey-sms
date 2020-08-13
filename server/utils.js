@@ -8,7 +8,7 @@ class Utils {
     let n = Math.floor( random.float() * (max-min+1) ) + min;
     let r = n.toString(16);
     while (r.length < len) {
-      r = r + randHex( len - maxlen );
+      r = r + this.randHex( len - maxlen );
     }
     return r;
   }

@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 require('dotenv-safe').config();
-const configurePassport = require('./passport');
+const configurePassport = require('./passport').configurePassport;
 const setRoutes = require('./routes');
 
 configurePassport();

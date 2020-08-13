@@ -11,10 +11,11 @@ const accountNewHandle = require('./account_new');
 const smsIncoming = require('./sms_incoming');
 const getSurveyResults = require('./get_survey_results');
 const getMessageResults = require('./get_message_results');
+const issueToken = require('./passport').issueToken;
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
-  res.redirect('/login')
+  res.status(403).send({message: 'Forbidden'});
 }
 
 module.exports = function(app) {
@@ -50,11 +51,12 @@ module.exports = function(app) {
         if (err) { return next(err); }
         // Issue a remember me cookie if the option was checked
         if (!req.body.remember_me) {
-            console.log('req.body');
-          console.log(req.body);
           return res.status(200).send({message: 'Success', account: account});
         }
 
+
+        console.log('req.body for remember me');
+        console.log(req.body);
         issueToken(account, function(err, token) {
           if (err) { return next(err); }
           res.cookie('remember_me', token, { path: '/', httpOnly: true, maxAge: 604800000 });
@@ -82,7 +84,7 @@ module.exports = function(app) {
     })
   });
 
-  app.get('/api/message_results/:survey_id', (req, res) => {
+  app.get('/api/message_results/:survey_id', ensureAuthenticated, (req, res) => {
     getMessageResults(req.params.survey_id)
     .then((gmrRes) => {
       res.status(200).send(JSON.stringify(gmrRes));
