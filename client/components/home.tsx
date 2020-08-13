@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 const axios = require('axios').default;
 import Signup from './signup';
 import Contacts from './contacts';
@@ -10,9 +10,24 @@ import SMSCount from '../models/sms_count';
 import {utils} from '../utils';
 
 export default function Home() {
-  let emptyInvalid: string[] = []
+  let emptyAccountData = {status: 'init', account: null};
+  const [accountData, setAccountData] = useState(emptyAccountData);
+  let emptyInvalid: string[] = [];
   const [invalid, setInvalid] = useState(emptyInvalid);
   const [numContacts, setNumContacts] = useState(0);
+
+  useEffect(() => {
+    if (accountData.status != 'init') {
+      return;
+    }
+    try {
+      setAccountData({
+        status: 'loaded',
+        account: JSON.parse(window.localStorage.account)
+      });
+    }
+    catch(err) { setAccountData({ status: 'loaded', account: null }); }
+  });
 
   let emptyContacts: { [id: number] : Contact } = {};
   let signupState = { accountId: utils.randHex(8), phone: '', password: '',
@@ -103,6 +118,49 @@ export default function Home() {
     return invalid;
   }
 
+  return (
+    <form className="body">
+      {renderAccountSections()}
+      <div className="resp-container">
+        <Contacts initState={contactsState} updateParent={updateContactsState}
+          invalid={invalid} />
+      </div>
+      <div className="resp-container">
+        <Build initState={buildState} updateParent={updateBuildState}
+          invalid={invalid} numContacts={numContacts} />
+      </div>
+      <div className="resp-container">
+        {renderInvalid()}
+        <div className="button button-large" onClick={submitSurvey}>
+          - Send the survey -
+        </div>
+      </div>
+    </form>
+  );
+
+  function renderAccountSections() {
+    if (!accountData.account) {
+      return (
+        <div>
+          <div className="resp-container">
+            <Explain />
+          </div>
+          <div className="resp-container">
+            <Signup initState={signupState} updateParent={updateSignupState}
+              invalid={invalid} />
+          </div>
+        </div>
+      );
+    }
+    else {
+      return (
+        <div className="resp-container">
+          New survey for {utils.phoneNumberOut(accountData.account.phone)}
+        </div>
+      )
+    }
+  }
+
   function renderInvalid() {
     let invalidMessages = {
       'phone': 'Please enter a phone number',
@@ -135,30 +193,4 @@ export default function Home() {
     }
     return null;
   }
-
-  return (
-    <form className="body">
-      <div className="resp-container">
-        <Explain />
-      </div>
-      <div className="resp-container">
-        <Signup initState={signupState} updateParent={updateSignupState}
-          invalid={invalid} />
-      </div>
-      <div className="resp-container">
-        <Contacts initState={contactsState} updateParent={updateContactsState}
-          invalid={invalid} />
-      </div>
-      <div className="resp-container">
-        <Build initState={buildState} updateParent={updateBuildState}
-          invalid={invalid} numContacts={numContacts} />
-      </div>
-      <div className="resp-container">
-        {renderInvalid()}
-        <div className="button button-large" onClick={submitSurvey}>
-          - Send the survey -
-        </div>
-      </div>
-    </form>
-  );
 }

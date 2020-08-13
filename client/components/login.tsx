@@ -36,6 +36,8 @@ export default function Login() {
       try {
         switch(res.data.message) {
           case('Success'):
+          window.localStorage.setItem('account', JSON.stringify(res.data.account));
+          location.assign('/');
           setErrorMessage(null);
           break;
 
@@ -50,8 +52,6 @@ export default function Login() {
       catch(err) {
         setErrorMessage('An unknown error occurred while logging in, please try again later: ' + err);
       }
-      console.log('res');
-      console.log(res);
     })
     .catch((err) => {
       setErrorMessage('An unknown error occurred while logging in, please try again later: ' + err);

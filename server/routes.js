@@ -54,13 +54,12 @@ module.exports = function(app) {
           return res.status(200).send({message: 'Success', account: account});
         }
 
-
         console.log('req.body for remember me');
         console.log(req.body);
         issueToken(account, function(err, token) {
           if (err) { return next(err); }
           res.cookie('remember_me', token, { path: '/', httpOnly: true, maxAge: 604800000 });
-          return res.status(200).send({message: 'Success', account: req.body.account});
+          return res.status(200).send({message: 'Success', account: account});
         });
 
       });
