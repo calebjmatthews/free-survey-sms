@@ -22,26 +22,25 @@ export default function Build(props: {initState: {surveyId: string, opener: stri
 
   function changeOpener(ev: any) {
     setOpener(ev.target.value);
+    props.updateParent({opener: ev.target.value});
   }
 
   function changeOption(option: Option, ev: any) {
     let text = ev.target.value;
-    setOptions((os) => {
-      let updOption = os[option.letter];
-      updOption.text = text;
-      let updOptions = Object.assign({}, os);
-      updOptions[option.letter];
-      return updOptions;
-    });
+    let updOption = options[option.letter];
+    updOption.text = text;
+    let updOptions = Object.assign({}, options);
+    updOptions[option.letter];
+    props.updateParent({options: updOptions});
+    setOptions(updOptions);
   }
 
   function changeNewOption(ev: any) {
     let text = ev.target.value;
-    setNewOption((no) => {
-      let updOption = new Option(no);
-      updOption.text = text;
-      return updOption;
-    })
+    let updOption = new Option(newOption);
+    updOption.text = text;
+    props.updateParent({newOption: updOption});
+    setNewOption(updOption);
   }
 
   useEffect(() => {
@@ -61,39 +60,41 @@ export default function Build(props: {initState: {surveyId: string, opener: stri
     }))
   }, [opener, options, newOption, response, showLink, props.numContacts]);
 
-  useEffect(() => {
-    props.updateParent({surveyId: props.initState.surveyId, opener: opener,
-      options: options, newOption: newOption, response: response, showLink: showLink,
-      smsCount: smsCount});
-  })
-
   function clearBuild() {
     setOpener('');
-    setNewOption(new Option({letter: 'A', text: ''}));
     setOptions({});
+    let emptyOption = new Option({letter: 'A', text: ''});
+    setNewOption(emptyOption);
     setResponse('');
     setShowLink(true);
+    let emptySMSCount = new SMSCount({ question: 0, response: 0,
+      contacts: props.numContacts, total: 0 });
+    setSMSCount(emptySMSCount);
+    props.updateParent({ opener: '', options: {}, newOption: emptyOption,
+      response: '', showLink: true, smsCount: emptySMSCount });
   }
 
   function addOption() {
-    setOptions((os) => {
-      let updOptions = os;
-      updOptions[newOption.letter] = newOption;
-      return updOptions;
-    });
-    setNewOption((no) => {
-      let newLetter = letters[highestLetter+1];
-      highestLetter++;
-      return new Option({letter: newLetter, text: ''});
-    });
+    let updOptions = options;
+    updOptions[newOption.letter] = newOption;
+    return updOptions;
+    setOptions(updOptions);
+    let newLetter = letters[highestLetter+1];
+    highestLetter++;
+    let nextOption = new Option({letter: newLetter, text: ''});
+    setNewOption(nextOption);
+    props.updateParent({ options: updOptions, newOption: nextOption });
   }
 
   function changeResponse(ev: any) {
     setResponse(ev.target.value);
+    props.updateParent({ response: ev.target.value });
   }
 
   function toggleShowLink(ev: any) {
-    setShowLink(!showLink)
+    let newShowLink = !showLink;
+    setShowLink(newShowLink);
+    props.updateParent({ showLink: newShowLink });
   }
 
   function renderInvalid(fieldName: string) {

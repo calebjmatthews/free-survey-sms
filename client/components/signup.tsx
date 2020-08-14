@@ -2,32 +2,40 @@ import React, { useState, useEffect } from 'react';
 import { utils } from '../utils';
 
 export default function Signup(props: {initState: {accountId: string, phone: string,
-  password: string, confirm: string}, updateParent: Function, invalid: string[]}) {
-  const [phone, setPhone] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirm, setConfirm] = useState('');
+  password?: string, confirm?: string}, updateParent: Function, invalid: string[]}) {
+  const [phone, setPhone] = useState(props.initState.phone);
+  const [password, setPassword] = useState(props.initState.password);
+  const [confirm, setConfirm] = useState(props.initState.confirm);
 
   function changePhone(ev: any) {
-    let phone = ev.target.value;
+    let newPhone = ev.target.value;
     if (ev.target.value.length == 10) {
-      phone = utils.phoneNumberOut(phone);
-      setPhone(phone);
+      newPhone = utils.phoneNumberOut(newPhone);
+      setPhone(newPhone);
+      props.updateParent({accountId: props.initState.accountId, phone: newPhone,
+        password: password, confirm: confirm});
     }
     else if (ev.target.value.length != 15) {
       setPhone(phone);
+      props.updateParent({accountId: props.initState.accountId, phone: newPhone,
+        password: password, confirm: confirm});
     }
   }
   function changePassword(ev: any) {
     setPassword(ev.target.value);
+    props.updateParent({accountId: props.initState.accountId, phone: phone,
+      password: ev.target.value, confirm: confirm});
   }
   function changeConfirm(ev: any) {
     setConfirm(ev.target.value);
+    props.updateParent({accountId: props.initState.accountId, phone: phone,
+      password: password, confirm: ev.target.value});
   }
 
-  useEffect(() => {
-    props.updateParent({accountId: props.initState.accountId, phone: phone,
-      password: password, confirm: confirm});
-  })
+  // useEffect(() => {
+  //   props.updateParent({accountId: props.initState.accountId, phone: phone,
+  //     password: password, confirm: confirm});
+  // }, [phone, password, confirm])
 
   function renderInvalid(fieldName: string) {
     let invalidMessages = {

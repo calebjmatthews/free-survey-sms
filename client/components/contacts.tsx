@@ -6,28 +6,30 @@ let emptyContacts: { [id: number] : Contact } = {};
 export default function Contacts(props: {initState:
   {contacts: { [id: number] : Contact }, newContact: Contact},
   updateParent: Function, invalid: string[]}) {
-  const [contacts, setContacts] = useState(emptyContacts);
+  const [contacts, setContacts] = useState(props.initState.contacts);
   function setContactField(value: any, fieldName: string, id: string) {
-    setContacts((cts) => {
-      let updContact = new Contact(cts[id]);
-      updContact[fieldName] = value;
-      let updContacts = Object.assign({}, cts);
-      updContacts[id] = updContact;
-      return updContacts;
-    });
+    let updContact = new Contact(contacts[id]);
+    updContact[fieldName] = value;
+    let updContacts = Object.assign({}, contacts);
+    updContacts[id] = updContact;
+    let numContacts = Object.keys(updContacts).length;
+    if (!utils.isEmpty(newContact.phone)) {
+      numContacts++;
+    }
+    props.updateParent({contacts: updContacts, numContacts: numContacts});
+    setContacts(updContacts);
   }
-  const [newContact, setNewContact] = useState(new Contact({phone: '', name: ''}));
+  const [newContact, setNewContact] = useState(props.initState.newContact);
   function setNewContactField(value: any, fieldName: string) {
-    setNewContact((nc) => {
-      let updContact = new Contact(nc);
-      updContact[fieldName] = value;
-      return updContact;
-    });
+    let updContact = new Contact(newContact);
+    updContact[fieldName] = value;
+    let numContacts = Object.keys(contacts).length;
+    if (!utils.isEmpty(newContact.phone)) {
+      numContacts++;
+    }
+    props.updateParent({newContact: updContact, numContacts: numContacts});
+    setNewContact(updContact);
   }
-
-  useEffect(() => {
-    props.updateParent({contacts: contacts, newContact: newContact});
-  })
 
   function addContact() {
     setContacts((cts) => {

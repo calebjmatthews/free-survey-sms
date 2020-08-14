@@ -7,11 +7,12 @@ const path = require('path');
 const passport = require('passport');
 
 const dbh = require('./db_handler').dbh;
+const issueToken = require('./passport').issueToken;
 const accountNewHandle = require('./account_new');
 const smsIncoming = require('./sms_incoming');
 const getSurveyResults = require('./get_survey_results');
 const getMessageResults = require('./get_message_results');
-const issueToken = require('./passport').issueToken;
+const getAccountExisting = require('./get_account_existing');
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
@@ -43,8 +44,6 @@ module.exports = function(app) {
     passport.authenticate('local', function(err, account, info) {
       if (err) { return next(err); }
       if (!account) {
-        console.log('arguments2');
-        console.log(arguments);
         return res.status(200).send(info);
       }
       req.logIn(account, function(err) {
@@ -53,9 +52,6 @@ module.exports = function(app) {
         if (!req.body.remember_me) {
           return res.status(200).send({message: 'Success', account: account});
         }
-
-        console.log('req.body for remember me');
-        console.log(req.body);
         issueToken(account, function(err, token) {
           if (err) { return next(err); }
           res.cookie('remember_me', token, { path: '/', httpOnly: true, maxAge: 604800000 });
@@ -92,6 +88,16 @@ module.exports = function(app) {
       console.error(err);
     })
   });
+
+  app.get('/api/get_account_existing/:account_id', ensureAuthenticated, (req, res) => {
+    getAccountExisting(req.params.account_id)
+    .then((gaeRes) => {
+      res.status(200).send(JSON.stringify(gaeRes));
+    })
+    .catch((err) => {
+      console.error(err);
+    })
+  })
 
   app.post('/api/account_new', (req, res) => {
     let payload = JSON.parse(req.body.payload);
