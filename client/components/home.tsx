@@ -130,12 +130,12 @@ export default function Home() {
       if (build.newOption.text.length > 0) {
         build.options[build.newOption.letter] = build.newOption;
       }
-      // axios.post('/api/account_new', {payload: JSON.stringify(
-      //   {signup: signup, contacts: contacts, build: build})
-      // }).then((res) => {
-      //   console.log('res');
-      //   console.log(res);
-      // });
+      axios.post('/api/account_new', {payload: JSON.stringify(
+        {signup: signup, contacts: contacts, build: build})
+      }).then((res) => {
+        console.log('res');
+        console.log(res);
+      });
     }
   }
 

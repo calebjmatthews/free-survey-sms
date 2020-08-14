@@ -3,7 +3,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const RememberMeStrategy = require('passport-remember-me').Strategy;
 const bcrypt = require('bcrypt');
 
-const dbh = require('./db_handler').dbh;
+const dbh = require('./db/db_handler').dbh;
 const utils = require('./utils');
 
 function configurePassport() {

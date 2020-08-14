@@ -1,6 +1,6 @@
 const client =
   require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-const dbh = require('./db_handler').dbh;
+const dbh = require('./db/db_handler').dbh;
   
 const FROM_PHONE_NUMBER = '+16692382810';
 

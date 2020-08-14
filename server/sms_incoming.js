@@ -1,6 +1,6 @@
 const client =
   require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-const dbh = require('./db_handler').dbh;
+const dbh = require('./db/db_handler').dbh;
 const sendAndUpdateMessage = require('./send_update_message');
 const utils = require('./utils');
 

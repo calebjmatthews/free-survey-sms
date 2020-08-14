@@ -12,13 +12,11 @@ export default function Signup(props: {initState: {accountId: string, phone: str
     if (ev.target.value.length == 10) {
       newPhone = utils.phoneNumberOut(newPhone);
       setPhone(newPhone);
-      props.updateParent({accountId: props.initState.accountId, phone: newPhone,
-        password: password, confirm: confirm});
+      props.updateParent({ phone: newPhone });
     }
     else if (ev.target.value.length != 15) {
-      setPhone(phone);
-      props.updateParent({accountId: props.initState.accountId, phone: newPhone,
-        password: password, confirm: confirm});
+      setPhone(newPhone);
+      props.updateParent({ phone: newPhone });
     }
   }
   function changePassword(ev: any) {

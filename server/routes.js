@@ -6,13 +6,13 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const passport = require('passport');
 
-const dbh = require('./db_handler').dbh;
+const dbh = require('./db/db_handler').dbh;
 const issueToken = require('./passport').issueToken;
-const accountNewHandle = require('./account_new');
+const accountNewSubmission = require('./account_new_submission');
 const smsIncoming = require('./sms_incoming');
-const getSurveyResults = require('./get_survey_results');
-const getMessageResults = require('./get_message_results');
-const getAccountExisting = require('./get_account_existing');
+const getSurveyResults = require('./db/get_survey_results');
+const getMessageResults = require('./db/get_message_results');
+const getAccountExisting = require('./db/get_account_existing');
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
@@ -101,7 +101,7 @@ module.exports = function(app) {
 
   app.post('/api/account_new', (req, res) => {
     let payload = JSON.parse(req.body.payload);
-    accountNewHandle(payload)
+    accountNewSubmission(payload)
     .then((anhRes) => {
       res.status(200).send('Survey inserted');
     })
