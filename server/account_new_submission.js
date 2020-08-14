@@ -1,5 +1,4 @@
 const dbh = require('./db/db_handler').dbh;
-const sendAndUpdateMessage = require('./send_update_message');
 const insertAccount = require('./db/accounts').insertAccount;
 const insertPositiveUsage = require('./db/usages').insertPositiveUsage;
 const checkUsageCoveredAndInsert = require('./db/usages').checkUsageCoveredAndInsert;
@@ -18,7 +17,7 @@ function accountNewSubmission(payload) {
     insertSurveyOptions(payload.build, payload.signup.accountId, payload.build.surveyId),
     insertSurveyContacts(payload.contacts, payload.signup.accountId,
       payload.build.surveyId),
-    insertContacts(payload.contacts, payload.signup.accountId, payload.build.surveyId),
+    insertContacts(payload.contacts, payload.signup.accountId),
     checkUsageCoveredAndInsert(payload.build, payload.contacts, payload.signup.accountId,
       FREE_MONTHLY_USAGE)
   ]);

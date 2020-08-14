@@ -1,6 +1,6 @@
 const dbh = require('./db_handler').dbh;
 
-function insertContacts(contacts, accountId, surveyId) {
+function insertContacts(contacts, accountId) {
   let insPromises = [];
   Object.keys(contacts.contacts).map((id) => {
     let contact = contacts.contacts[id];
