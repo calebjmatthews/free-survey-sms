@@ -71,3 +71,10 @@ Login
   - Code is entered to login
   - Mandatory password change
 - After logged in, "Login" changes to "Account"
+
+Updating parent state
+---------------------
+- On change to child input field
+  - Update parent with object containing field that has changed
+  - Parent rebuilds state, only applying child change to field that has changed
+  - Parent calls set###State function to update the component state

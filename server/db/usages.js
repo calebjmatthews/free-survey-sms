@@ -35,9 +35,26 @@ function checkUsageCoveredAndInsert(build, contacts, accountId, currentBalance) 
     ]);
   }
   else {
-    console.error('Calculated usage ' + usage + ' higher than free monthly credits');
+    console.error('Calculated usage ' + usage + ' higher than current balance '
+      + currentBalance);
     return false;
   }
 }
 
-module.exports = { insertPositiveUsage, insertNegativeUsage, checkUsageCoveredAndInsert }
+function getCurrentUsageBalance(accountId) {
+  return dbh.pool.query({
+    sql: ('SELECT * FROM `usages` WHERE `account_id`=?'),
+    values: [accountId]
+  })
+  .then((usages) => {
+    let currentBalance = 0;
+    usages.map((usage) => {
+      if (usage.direction == 'positive') { currentBalance += usage.message_count; }
+      else if (usage.direction == 'negative') { currentBalance -= usage.message_count; }
+    });
+    return currentBalance;
+  })
+}
+
+module.exports = { insertPositiveUsage, insertNegativeUsage, checkUsageCoveredAndInsert,
+  getCurrentUsageBalance }

@@ -13,4 +13,40 @@ function insertContacts(contacts, accountId) {
   return Promise.all(insPromises);
 }
 
-module.exports = { insertContacts }
+function handleContacts(contacts, accountId) {
+  let insPromises = [];
+  let updPromises = [];
+  let delPromises = [];
+
+  Object.keys(contacts.contacts).map((id) => {
+    let contact = contacts.contacts[id];
+    switch(contact.status) {
+      case 'new':
+      insPromises.push(dbh.pool.query({
+        sql: ('INSERT INTO `contacts`(`id`, `account_id`, `phone`, `name`) '
+          + 'VALUES (?, ?, ?, ?)'),
+        values: [contact.id, accountId, contact.phone, contact.name]
+      }));
+      break;
+
+      case 'updated':
+      insPromises.push(dbh.pool.query({
+        sql: ('UPDATE `contacts` SET `phone`=?, `name`=? WHERE `id`=?'),
+        values: [contact.phone, contact.name, contact.id]
+      }));
+      break;
+    }
+  });
+
+  Object.keys(contacts.deletedContacts).map((id) => {
+    let contact = contacts.deletedContacts[id];
+    delPromises.push(dbh.pool.query({
+      sql: ('DELETE FROM `contacts` WHERE `id`=?'),
+      values: [contact.id]
+    }));
+  });
+
+  return Promise.all(insPromises, updPromises, delPromises);
+}
+
+module.exports = { handleContacts }
