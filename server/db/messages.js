@@ -1,5 +1,6 @@
 const dbh = require('./db_handler').dbh;
 const utils = require('../utils');
+const sendAndUpdateMessage = require('../send_update_message');
 
 const FROM_PHONE_NUMBER = '+16692382810';
 

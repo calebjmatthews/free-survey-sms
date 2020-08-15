@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Contact from '../models/contact';
 import { utils } from '../utils';
 
 let emptyContacts: { [id: number] : Contact } = {};
 export default function Contacts(props: {initState:
-  {contacts: { [id: number] : Contact }, newContact: Contact},
+  {contacts: { [id: number] : Contact },
+  deletedContacts: { [id: number] : Contact }, newContact: Contact},
   updateParent: Function, invalid: string[]}) {
   const [contacts, setContacts] = useState(props.initState.contacts);
   function setContactField(value: any, fieldName: string, id: string) {
@@ -13,9 +15,7 @@ export default function Contacts(props: {initState:
     let updContacts = Object.assign({}, contacts);
     updContacts[id] = updContact;
     let numContacts = Object.keys(updContacts).length;
-    if (!utils.isEmpty(newContact.phone)) {
-      numContacts++;
-    }
+    if (!utils.isEmpty(newContact.phone)) { numContacts++; }
     props.updateParent({contacts: updContacts, numContacts: numContacts});
     setContacts(updContacts);
   }
@@ -24,12 +24,12 @@ export default function Contacts(props: {initState:
     let updContact = new Contact(newContact);
     updContact[fieldName] = value;
     let numContacts = Object.keys(contacts).length;
-    if (!utils.isEmpty(newContact.phone)) {
-      numContacts++;
-    }
+    if (!utils.isEmpty(newContact.phone)) { numContacts++; }
     props.updateParent({newContact: updContact, numContacts: numContacts});
     setNewContact(updContact);
   }
+  const [deletedContacts, setDeletedContacts] =
+    useState(props.initState.deletedContacts);
 
   function addContact() {
     setContacts((cts) => {
@@ -51,11 +51,17 @@ export default function Contacts(props: {initState:
     else if (ev.target.value.length != 15) {
       setContactField(phone, 'phone', contact.id);
     }
+    if (contact.status == 'existing') {
+      setContactField('updated', 'status', contact.id);
+    }
   }
 
   function changeName(contact: Contact, ev: any) {
     let name = ev.target.value;
     setContactField(name, 'name', contact.id);
+    if (contact.status == 'existing') {
+      setContactField('updated', 'status', contact.id);
+    }
   }
 
   function changeNewPhone(contact: Contact, ev: any) {
@@ -72,6 +78,28 @@ export default function Contacts(props: {initState:
   function changeNewName(contact: Contact, ev: any) {
     let name = ev.target.value;
     setNewContactField(name, 'name');
+  }
+
+  function deleteContact(contact: Contact) {
+    let updDelContacts = Object.assign({}, deletedContacts);
+    if (contact.status == 'existing') {
+      updDelContacts[contact.id] = contact;
+    }
+    let updContacts = Object.assign({}, contacts);
+    delete updContacts[contact.id];
+    let numContacts = Object.keys(updContacts).length;
+    if (!utils.isEmpty(newContact.phone)) { numContacts++; }
+    setDeletedContacts(updDelContacts);
+    setContacts(updContacts);
+    props.updateParent({deletedContacts: updDelContacts, contacts: updContacts,
+      numContacts: numContacts});
+  }
+
+  function clearNewContact(ev: any) {
+    let emptyContact = new Contact({ id: utils.randHex(8), phone: '', name: '' });
+    setNewContact(emptyContact);
+    let numContacts = Object.keys(contacts).length;
+    props.updateParent({newContact: emptyContact, numContacts: numContacts});
   }
 
   function renderInvalid(fieldName: string) {
@@ -97,6 +125,9 @@ export default function Contacts(props: {initState:
         return renderContact(contact);
       })}
       <div className="resp-row">
+        <div className="icon-button">
+          <FontAwesomeIcon icon="paper-plane" />
+        </div>
         <div className="input-group resp-row-child">
           <div className="input-label">Phone number</div>
           <input type="tel" value={newContact.phone}
@@ -108,6 +139,9 @@ export default function Contacts(props: {initState:
           <input type="text" value={newContact.name}
             onChange={(ev) => changeNewName(newContact, ev)} />
         </div>
+        <div className="icon-button text-danger" onClick={clearNewContact}>
+          <FontAwesomeIcon icon="trash" />
+        </div>
       </div>
       <div className="button" onClick={addContact}>Add row</div>
       {renderInvalid('no_contacts')}
@@ -117,6 +151,9 @@ export default function Contacts(props: {initState:
   function renderContact(contact: Contact) {
     return (
       <div className="resp-row" key={contact.id}>
+        <div className="icon-button">
+          <FontAwesomeIcon icon="paper-plane" />
+        </div>
         <div className="input-group resp-row-child">
           <div className="input-label">Phone number</div>
           <input type="tel" value={contact.phone}
@@ -127,6 +164,10 @@ export default function Contacts(props: {initState:
           <div className="input-label">Name (optional)</div>
           <input type="text" value={contact.name}
             onChange={(ev) => changeName(contact, ev)} />
+        </div>
+        <div className="icon-button text-danger"
+          onClick={() => deleteContact(contact)}>
+          <FontAwesomeIcon icon="trash" />
         </div>
       </div>
     );

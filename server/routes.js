@@ -9,6 +9,7 @@ const passport = require('passport');
 const dbh = require('./db/db_handler').dbh;
 const issueToken = require('./passport').issueToken;
 const accountNewSubmission = require('./account_new_submission');
+const accountExistingSubmission = require('./account_existing_submission');
 const smsIncoming = require('./sms_incoming');
 const getSurveyResults = require('./db/get_survey_results');
 const getMessageResults = require('./db/get_message_results');
@@ -102,6 +103,17 @@ module.exports = function(app) {
   app.post('/api/account_new', (req, res) => {
     let payload = JSON.parse(req.body.payload);
     accountNewSubmission(payload)
+    .then((anhRes) => {
+      res.status(200).send('Survey inserted');
+    })
+    .catch((err) => {
+      console.error(err);
+    })
+  });
+
+  app.post('/api/account_existing', (req, res) => {
+    let payload = JSON.parse(req.body.payload);
+    accountExistingSubmission(payload)
     .then((anhRes) => {
       res.status(200).send('Survey inserted');
     })

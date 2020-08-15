@@ -175,16 +175,20 @@ export default function Build(props: {initState: {surveyId: string, opener: stri
           </div>
           <div className="info-box">
             <div>
-              You have 30 free <FontAwesomeIcon icon="envelope" />!
+              You have 30 free
+              <FontAwesomeIcon className="text-primary" icon="envelope" />!
             </div>
             <div>
-              This survey will use {smsCount.total} <FontAwesomeIcon icon="envelope" />:
+              This survey will use {smsCount.total}
+              <FontAwesomeIcon className="text-primary" icon="envelope" />:
               <ul>
                 <li>
-                  Question {smsCount.question} <FontAwesomeIcon icon="envelope" />
+                  Question {smsCount.question}
+                  <FontAwesomeIcon className="text-primary" icon="envelope" />
                 </li>
                 <li>
-                  +Response {smsCount.response} <FontAwesomeIcon icon="envelope" />
+                  +Response {smsCount.response}
+                  <FontAwesomeIcon className="text-primary" icon="envelope" />
                 </li>
                 <li>
                   x{smsCount.contacts} Contacts

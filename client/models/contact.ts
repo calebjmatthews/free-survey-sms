@@ -12,7 +12,7 @@ export default class Contact {
       this.id = utils.randHex(8);
     }
     if (!this.status) {
-      this.status = 'clean';
+      this.status = 'new';
     }
   }
 }

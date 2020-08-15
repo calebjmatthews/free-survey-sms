@@ -14,6 +14,7 @@ import {utils} from '../utils';
 
 export default function Home() {
   let emptyContacts: { [id: number] : Contact } = {};
+  let emptyDelContacts: { [id: number] : Contact } = {};
   let newOptions: { [letter: string] : Option } = {};
   newOptions['A'] = new Option({letter: 'A', text: '10am Sat'});
   newOptions['B'] = new Option({letter: 'B', text: '1pm Sat'});
@@ -30,6 +31,7 @@ export default function Home() {
     }),
     contactsState: new ContactsState({
       contacts: emptyContacts,
+      deletedContacts: emptyDelContacts,
       newContact: new Contact({ id: utils.randHex(8), phone: '', name: '' }),
       numContacts: 0
     }),
@@ -97,6 +99,7 @@ export default function Home() {
             signupState: new SignupState({ accountId: account.id,
               phone: account.phone }),
             contactsState: new ContactsState({ contacts: contactMap,
+              deletedContacts: {},
               newContact: oldData.contactsState.newContact,
               numContacts: Object.keys(contactMap).length })
           })
@@ -116,9 +119,9 @@ export default function Home() {
     if (newInvalid.length == 0) {
       console.log('data');
       console.log(data);
-      let signup = data.signupState;
-      let build = data.buildState;
-      let contacts = data.contactsState;
+      let signup = new SignupState(Object.assign({}, data.signupState));
+      let build = new BuildState(Object.assign({}, data.buildState));
+      let contacts = new ContactsState(Object.assign({}, data.contactsState));
       signup.phone = utils.phoneNumberIn(signup.phone);
       if (contacts.newContact.phone.length > 0) {
         contacts.contacts[contacts.newContact.id] = contacts.newContact;
@@ -130,12 +133,22 @@ export default function Home() {
       if (build.newOption.text.length > 0) {
         build.options[build.newOption.letter] = build.newOption;
       }
-      axios.post('/api/account_new', {payload: JSON.stringify(
-        {signup: signup, contacts: contacts, build: build})
-      }).then((res) => {
-        console.log('res');
-        console.log(res);
-      });
+      if (data.status != 'loadedAccount') {
+        axios.post('/api/account_new', {payload: JSON.stringify(
+          {signup: signup, contacts: contacts, build: build})
+        }).then((res) => {
+          console.log('res');
+          console.log(res);
+        });
+      }
+      else {
+        axios.post('/api/account_existing', {payload: JSON.stringify(
+          {signup: signup, contacts: contacts, build: build})
+        }).then((res) => {
+          console.log('res');
+          console.log(res);
+        });
+      }
     }
   }
 
