@@ -123,6 +123,12 @@ body {
 .button:hover {
   background: #446a90c7;
 }
+.button-success {
+  background: #4c8859;
+}
+.button-success:hover {
+  background: #4c8859c4;
+}
 .button.button-large {
   margin-bottom: unset;
   font-size: 1.2em;
@@ -288,10 +294,54 @@ th, td {
 .text-danger {
   color: #ce1818;
 }
+.selected .text-danger {
+  color: #ff4a4a;
+}
 
 .login-form {
   display: flex;
   flex-direction: column;
+}
+
+.modal-container {
+  z-index: 100;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.modal {
+  z-index: 101;
+}
+
+.modal-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+  background: #000;
+}
+
+.price-container {
+  text-align: center;
+  background: #fff;
+  color: #000;
+  cursor: pointer;
+  transition: background ease-in-out 0.3s, color ease-in-out 0.3s;
+}
+.price-container.selected {
+  background: #446a90;
+  color: #fff;
+}
+.price-title {
+  font-size: 2em;
 }
 
 @media (max-width:767px) {

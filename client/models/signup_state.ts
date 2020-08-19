@@ -3,6 +3,7 @@ export default class SignupState implements SignupState {
   phone: string;
   password?: string;
   confirm?: string;
+  balance?: number;
 
   constructor(signupState: SignupState) {
     Object.assign(this, signupState);

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const axios = require('axios').default;
 import Signup from './signup';
 import Contacts from './contacts';
 import Build from './build';
 import Explain from './explain';
+import Payment from './payment';
 import Option from '../models/option';
 import Contact from '../models/contact';
 import SMSCount from '../models/sms_count';
@@ -19,15 +21,17 @@ export default function Home() {
   newOptions['A'] = new Option({letter: 'A', text: '10am Sat'});
   newOptions['B'] = new Option({letter: 'B', text: '1pm Sat'});
   newOptions['C'] = new Option({letter: 'C', text: '3pm Sun'});
-  let defaultData: {status: string, signupState: SignupState,
+  let defaultData: {status: string, paymentOpened: boolean, signupState: SignupState,
     contactsState: ContactsState, buildState: BuildState}
     = {
     status: 'init',
+    paymentOpened: false,
     signupState: new SignupState({
       accountId: utils.randHex(8),
       phone: '',
       password: '',
-      confirm: ''
+      confirm: '',
+      balance: null
     }),
     contactsState: new ContactsState({
       contacts: emptyContacts,
@@ -76,6 +80,11 @@ export default function Home() {
       return Object.assign({}, oldData, { buildState: newBuildState });
     });
   }
+  function updatePayment(changedPayment: boolean) {
+    setData((oldData) => {
+      return Object.assign({}, oldData, { paymentOpened: changedPayment });
+    });
+  }
 
   useEffect(() => {
     if (data.status != 'init') {
@@ -97,7 +106,7 @@ export default function Home() {
           return Object.assign({}, oldData, {
             status: 'loadedAccount',
             signupState: new SignupState({ accountId: account.id,
-              phone: account.phone }),
+              phone: account.phone, balance: res.data.balance }),
             contactsState: new ContactsState({ contacts: contactMap,
               deletedContacts: {},
               newContact: oldData.contactsState.newContact,
@@ -198,6 +207,7 @@ export default function Home() {
 
   return (
     <form className="body">
+      <Payment paymentOpened={data.paymentOpened} updateParent={updatePayment} />
       {renderAccountSections()}
       <div className="resp-container">
         <Contacts initState={data.contactsState} updateParent={updateContactsState}
@@ -205,15 +215,11 @@ export default function Home() {
       </div>
       <div className="resp-container">
         <Build initState={data.buildState} updateParent={updateBuildState}
-          invalid={invalid}
-          numContacts={data.contactsState.numContacts} />
+          invalid={invalid} numContacts={data.contactsState.numContacts}
+          balance={data.signupState.balance}
+          loggedIn={(data.status == 'loadedAccount')} />
       </div>
-      <div className="resp-container">
-        {renderInvalid()}
-        <div className="button button-large" onClick={submitSurvey}>
-          - Send the survey -
-        </div>
-      </div>
+      {renderFinalButton()}
     </form>
   );
 
@@ -271,5 +277,29 @@ export default function Home() {
       );
     }
     return null;
+  }
+
+  function renderFinalButton() {
+    if (data.buildState.smsCount.total > data.signupState.balance) {
+      return (
+        <div className="resp-container">
+          <p>
+            You don't have enough <FontAwesomeIcon className="text-primary" icon="envelope" /> to send this survey. Additional <FontAwesomeIcon className="text-primary" icon="envelope" /> are $2 for 100:
+          </p>
+          <div className="button button-large button-success"
+            onClick={() => updatePayment(true)}>
+            Buy <FontAwesomeIcon icon="envelope" />
+          </div>
+        </div>
+      );
+    }
+    return(
+      <div className="resp-container">
+        {renderInvalid()}
+        <div className="button button-large" onClick={submitSurvey}>
+          - Send the survey -
+        </div>
+      </div>
+    );
   }
 }

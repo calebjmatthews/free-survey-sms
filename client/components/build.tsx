@@ -12,7 +12,7 @@ const URL = 'textpoll.app/r/';
 export default function Build(props: {initState: {surveyId: string, opener: string,
   options: {[letter: string] : Option}, newOption: Option, response: string,
   showLink: boolean, smsCount: SMSCount}, updateParent: Function, invalid: string[],
-  numContacts: number}) {
+  numContacts: number, balance: number, loggedIn: boolean}) {
   const [opener, setOpener] = useState(props.initState.opener);
   const [options, setOptions] = useState(props.initState.options);
   const [newOption, setNewOption] = useState(props.initState.newOption);
@@ -173,29 +173,7 @@ export default function Build(props: {initState: {surveyId: string, opener: stri
               {renderLink(props.initState.surveyId)}
             </div>
           </div>
-          <div className="info-box">
-            <div>
-              You have 30 free
-              <FontAwesomeIcon className="text-primary" icon="envelope" />!
-            </div>
-            <div>
-              This survey will use {smsCount.total}
-              <FontAwesomeIcon className="text-primary" icon="envelope" />:
-              <ul>
-                <li>
-                  Question {smsCount.question}
-                  <FontAwesomeIcon className="text-primary" icon="envelope" />
-                </li>
-                <li>
-                  +Response {smsCount.response}
-                  <FontAwesomeIcon className="text-primary" icon="envelope" />
-                </li>
-                <li>
-                  x{smsCount.contacts} Contacts
-                </li>
-              </ul>
-            </div>
-          </div>
+          {renderUsage()}
         </div>
       </div>
     </div>
@@ -217,5 +195,37 @@ export default function Build(props: {initState: {surveyId: string, opener: stri
       return (<span>{URL + surveyId}</span>);
     }
     return null;
+  }
+
+  function renderUsage() {
+    let currentExplanation = 'You have 30 free ';
+    if (props.loggedIn) {
+      currentExplanation = 'You currently have ' + props.balance + ' ';
+    }
+    return (
+      <div className="info-box">
+        <div>
+          {currentExplanation}
+          <FontAwesomeIcon className="text-primary" icon="envelope" />
+        </div>
+        <div>
+          {'This survey will use ' + smsCount.total + ' '}
+          <FontAwesomeIcon className="text-primary" icon="envelope" />:
+          <ul>
+            <li>
+              {'Question ' + smsCount.question + ' '}
+              <FontAwesomeIcon className="text-primary" icon="envelope" />
+            </li>
+            <li>
+              {'+Response ' + smsCount.response + ' '}
+              <FontAwesomeIcon className="text-primary" icon="envelope" />
+            </li>
+            <li>
+              {'x' + smsCount.contacts + ' Contacts'}
+            </li>
+          </ul>
+        </div>
+      </div>
+    );
   }
 }
