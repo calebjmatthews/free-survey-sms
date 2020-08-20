@@ -280,7 +280,8 @@ export default function Home() {
   }
 
   function renderFinalButton() {
-    if (data.buildState.smsCount.total > data.signupState.balance) {
+    if (data.status == 'loadedAccount'
+      && data.buildState.smsCount.total > data.signupState.balance) {
       return (
         <div className="resp-container">
           <p>

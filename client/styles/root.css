@@ -317,6 +317,8 @@ th, td {
 
 .modal {
   z-index: 101;
+  max-height: 80%;
+  overflow-y: auto;
 }
 
 .modal-background {
@@ -337,11 +339,16 @@ th, td {
   transition: background ease-in-out 0.3s, color ease-in-out 0.3s;
 }
 .price-container.selected {
-  background: #446a90;
+  background: #003087;
   color: #fff;
 }
 .price-title {
   font-size: 2em;
+}
+.paypal-button-wrapper {
+  min-height: 245px;
+  max-width: 750px;
+  margin: auto;
 }
 
 @media (max-width:767px) {

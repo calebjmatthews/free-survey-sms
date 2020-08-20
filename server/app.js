@@ -4,6 +4,7 @@ const server = require('http').Server(app);
 require('dotenv-safe').config();
 const configurePassport = require('./passport').configurePassport;
 const setRoutes = require('./routes');
+const paypalTokenRenew = require('./paypal_token_renew');
 
 configurePassport();
 setRoutes(app);

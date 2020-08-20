@@ -72,6 +72,12 @@ Login
   - Mandatory password change
 - After logged in, "Login" changes to "Account"
 
+Account
+-------
+- Historical surveys
+- Add/edit/remove contacts
+- Add funds
+
 Updating parent state
 ---------------------
 - On change to child input field
@@ -85,9 +91,3 @@ Payments
 - Two potential models:
   - $2 for 100 messages, $5 for 400 messages, $10 for 1000 messages
   - $2 for 50 contacts, $5 for 200 contacts, $10 for 500 contacts
-- Paypal info:
-  Sandbox personal account: sb-pyu4m2979909@personal.example.com
-  Sandbox business account: sb-fot0v2982828@business.example.com
-  Client ID: Af7hXoskFSSdxSK193vV4KltD-Lfv7cSf6pq4vJrNMNIg3doZrINgQ94eFOFrmFr5T3111Cb3nBZfOUl
-  Secret: EJFdtXvWqxDjzxK5pff-z3xu_Z2No0q1EASn_rVPtRFXDhBhETn8JhKBw_FhPQTO5IqxalpwnvmJuj2M
-  Current token: A21AAEuOVB3jU0wfLmvzDthFHXDa2nUxZzjczkCiIlAIz8G1wFPETmTijVjNi8gyq7_tmyHFwjW0qTq0983_zvvKf2z1kd9KQ
