@@ -101,6 +101,33 @@ export default function Build(props: {initState: {surveyId: string, opener: stri
     }
   }
 
+  function removeOption(remOption: Option) {
+    let optionArray: Option[] = [];
+    let indexToRemove = null;
+    Object.keys(options).map((letter) => {
+      let letterIndex = letters.indexOf(letter);
+      optionArray[letterIndex] = options[letter];
+      if (letter = remOption.letter) { indexToRemove = letterIndex; }
+    });
+    optionArray.splice(indexToRemove, 1);
+    let updOptions: {[letter: string] : Option} = {};
+    optionArray.map((option, index) => {
+      option.letter = letters[index];
+      updOptions[option.letter] = option;
+    });
+    setOptions(updOptions);
+    let nextOption = new Option(newOption);
+    nextOption.letter = letters[optionArray.length];
+    setNewOption(nextOption);
+    props.updateParent({ options: updOptions, newOption: nextOption });
+  }
+
+  function clearNewOption() {
+    let nextOption = new Option({letter: newOption.letter, text: ''});
+    setNewOption(nextOption);
+    props.updateParent({ newOption: nextOption });
+  }
+
   function changeResponse(ev: any) {
     setResponse(ev.target.value);
     props.updateParent({ response: ev.target.value });
@@ -145,10 +172,15 @@ export default function Build(props: {initState: {surveyId: string, opener: stri
             let option = options[letter];
             return renderOption(option);
           })}
-          <div className="input-group" key={newOption.letter}>
-            <div className="input-label">Option {newOption.letter}</div>
-            <textarea rows={1} value={newOption.text}
-              onChange={(ev) => changeNewOption(ev)} />
+          <div className="resp-row">
+            <div className="input-group resp-row-child">
+              <div className="input-label">Option {newOption.letter}</div>
+              <textarea rows={1} value={newOption.text}
+                onChange={(ev) => changeNewOption(ev)} />
+            </div>
+            <div className="icon-button text-danger" onClick={clearNewOption}>
+              <FontAwesomeIcon icon="trash" />
+            </div>
             {renderInvalid('new_option')}
             {renderInvalid('no_options')}
           </div>
@@ -196,11 +228,17 @@ export default function Build(props: {initState: {surveyId: string, opener: stri
 
   function renderOption(option: Option) {
     return (
-      <div className="input-group" key={option.letter}>
-        <div className="input-label">Option {option.letter}</div>
-        <textarea rows={1} value={option.text}
-          onChange={(ev) => changeOption(option, ev)} />
-        {renderInvalid('option|' + option.letter)}
+      <div className="resp-row" key={option.letter}>
+        <div className="input-group resp-row-child">
+          <div className="input-label">Option {option.letter}</div>
+          <textarea rows={1} value={option.text}
+            onChange={(ev) => changeOption(option, ev)} />
+          {renderInvalid('option|' + option.letter)}
+        </div>
+        <div className="icon-button text-danger"
+          onClick={() => removeOption(option)}>
+          <FontAwesomeIcon icon="trash" />
+        </div>
       </div>
     );
   }
