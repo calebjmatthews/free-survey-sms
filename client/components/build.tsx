@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Option from '../models/option';
 import SMSCount from '../models/sms_count';
+import { utils } from '../utils';
 
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
   'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-let highestLetter = 0;
 let emptyOptions: {[letter: string] : Option} = {};
 const URL = 'textpoll.app/r/';
 
@@ -75,15 +75,30 @@ export default function Build(props: {initState: {surveyId: string, opener: stri
   }
 
   function addOption() {
-    let updOptions = options;
-    updOptions[newOption.letter] = newOption;
-    return updOptions;
-    setOptions(updOptions);
-    let newLetter = letters[highestLetter+1];
-    highestLetter++;
-    let nextOption = new Option({letter: newLetter, text: ''});
-    setNewOption(nextOption);
-    props.updateParent({ options: updOptions, newOption: nextOption });
+    if (!utils.isEmpty(newOption.text)) {
+      let invalidIndex = props.invalid.indexOf('new_option');
+      if (invalidIndex != -1) { props.invalid.splice(invalidIndex, 1)};
+      let updOptions = options;
+      updOptions[newOption.letter] = newOption;
+      setOptions(updOptions);
+      let highestIndex = 1;
+      Object.keys(updOptions).map((letter) => {
+        let newIndex = letters.indexOf(letter);
+        if (newIndex > highestIndex) { highestIndex = newIndex; }
+      });
+      let newLetter = letters[highestIndex+1];
+      let nextOption = new Option({letter: newLetter, text: ''});
+      setNewOption(nextOption);
+      props.updateParent({ options: updOptions, newOption: nextOption });
+    }
+    else {
+      let invalidIndex = props.invalid.indexOf('new_option');
+      if (invalidIndex == -1) {
+        props.invalid.push('new_option');
+        let cNewOption = new Option({letter: newOption.letter, text: ''});
+        setNewOption(cNewOption);
+      };
+    }
   }
 
   function changeResponse(ev: any) {
@@ -101,7 +116,8 @@ export default function Build(props: {initState: {surveyId: string, opener: stri
     let invalidMessages = {
       'opener': 'Please add an opening message and question',
       'no_options': 'Please add at least two survey options',
-      'option': 'Please add the text for the option',
+      'option': 'Please add descriptive text for the option',
+      'new_option': 'Please add descriptive text for the option',
       'response': 'Please add the automated response to a survey answer'
     }
     let trueFieldName = fieldName;
@@ -133,6 +149,7 @@ export default function Build(props: {initState: {surveyId: string, opener: stri
             <div className="input-label">Option {newOption.letter}</div>
             <textarea rows={1} value={newOption.text}
               onChange={(ev) => changeNewOption(ev)} />
+            {renderInvalid('new_option')}
             {renderInvalid('no_options')}
           </div>
           <div className="button" onClick={addOption}>Add option</div>
@@ -161,9 +178,7 @@ export default function Build(props: {initState: {surveyId: string, opener: stri
                   </span>
                 );
               })}
-              <span>
-                {newOption.letter + ') ' + newOption.text}
-              </span>
+              {renderDemoNewOption()}
             </div>
             <div className="demo-message outgoing">
               A
@@ -188,6 +203,13 @@ export default function Build(props: {initState: {surveyId: string, opener: stri
         {renderInvalid('option|' + option.letter)}
       </div>
     );
+  }
+
+  function renderDemoNewOption() {
+    if (newOption.text) {
+      return <span> {newOption.letter + ') ' + newOption.text} </span>;
+    }
+    else { return null; }
   }
 
   function renderLink(surveyId: string) {
