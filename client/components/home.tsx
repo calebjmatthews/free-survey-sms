@@ -92,7 +92,11 @@ export default function Home() {
     }
     try {
       let account = JSON.parse(window.localStorage.account);
-      axios.get('/api/get_account_existing/' + account.id)
+      axios({
+        method: 'GET',
+        url: ('/api/get_account_existing/' + account.id),
+        credentials: 'same-origin'
+      })
       .then((res) => {
         console.log('res');
         console.log(res);

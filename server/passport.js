@@ -70,9 +70,9 @@ function consumeRememberMeToken(token, callback) {
   })
   .then((tokensRes) => {
     if (tokensRes.length > 0) {
-      dbh.pool.query({
-        sql: ('DELETE FROM `tokens` WHERE `token`=?'), values: [token]
-      });
+      // dbh.pool.query({
+      //   sql: ('DELETE FROM `tokens` WHERE `token`=?'), values: [token]
+      // });
       return callback(null, tokensRes[0].account_id);
     }
     else { return callback(null, false); }

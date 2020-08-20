@@ -49,4 +49,4 @@ function handleContacts(contacts, accountId) {
   return Promise.all(insPromises, updPromises, delPromises);
 }
 
-module.exports = { handleContacts }
+module.exports = { handleContacts, insertContacts }

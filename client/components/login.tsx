@@ -31,8 +31,17 @@ export default function Login() {
     ev.preventDefault();
     let inPhone = utils.phoneNumberIn(phone);
 
-    axios.post('/login', {username: inPhone, password: password, remember_me: rememberMe
-    }).then((res) => {
+    axios({
+      method: 'POST',
+      url: '/login',
+      data: {
+        username: inPhone,
+        password: password,
+        remember_me: rememberMe
+      },
+      credentials: 'same-origin'
+    })
+    .then((res) => {
       try {
         switch(res.data.message) {
           case('Success'):
