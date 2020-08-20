@@ -81,7 +81,7 @@ export default function Build(props: {initState: {surveyId: string, opener: stri
       let updOptions = options;
       updOptions[newOption.letter] = newOption;
       setOptions(updOptions);
-      let highestIndex = 1;
+      let highestIndex = 0;
       Object.keys(updOptions).map((letter) => {
         let newIndex = letters.indexOf(letter);
         if (newIndex > highestIndex) { highestIndex = newIndex; }
