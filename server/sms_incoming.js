@@ -17,7 +17,7 @@ function smsIncoming(payload) {
   let messageId = utils.randHex(8);
   return dbh.pool.query({
     sql: ('INSERT INTO `messages`(`id`, `call_sid`, `status`, `from`, `to`, '
-      + '`direction`, `text`) VALUES (?, ?, ?, ?, ?, ?)'),
+      + '`direction`, `text`) VALUES (?, ?, ?, ?, ?, ?, ?)'),
     values: [messageId, payload.MessageSid, 'received', payload.From, payload.To,
       'incoming', payload.Body]
   })
