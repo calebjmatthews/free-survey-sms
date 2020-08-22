@@ -351,6 +351,15 @@ th, td {
   margin: auto;
 }
 
+.color-square {
+  display: inline-block;
+  position: relative;
+  top: 2px;
+  margin-right: 0.25em;
+  width: 1em;
+  height: 1em;
+}
+
 @media (max-width:767px) {
   .resp-container {
     margin: 5% auto;

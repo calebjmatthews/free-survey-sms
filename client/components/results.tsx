@@ -50,12 +50,8 @@ export default function Results() {
                   fontFamily: '"Manrope", sans-serif',
                   fontSize: '0.6em',
                 }}
-                data={data.surveyOptions.map((option, index) => {
-                  return {
-                    title: option.letter,
-                    value: option.count,
-                    color: chartColors[(index) % 6] }
-                })}
+                data={getPieData()}
+                animate
                 label={({ dataEntry }) => `${dataEntry.title} ${Math.round(dataEntry.percentage)}%`}
               />
             </div>
@@ -79,6 +75,20 @@ export default function Results() {
     return null;
   }
 
+  function getPieData() {
+    let pieData = [];
+    data.surveyOptions.map((option, index) => {
+      if (option.count > 0) {
+        pieData.push({
+          title: option.letter,
+          value: option.count,
+          color: chartColors[(index) % 6]
+        })
+      }
+    });
+    return pieData;
+  }
+
   function renderTable() {
     return (
       <div className="resp-row-child">
@@ -95,7 +105,11 @@ export default function Results() {
             {data.surveyOptions.map((option, index) => {
               return (
                 <tr key={index}>
-                  <td>{option.letter}</td>
+                  <td>
+                    <div className="color-square"
+                      style={{'background': chartColors[(index) % 6]}}></div>
+                    {option.letter}
+                  </td>
                   <td>{option.text}</td>
                   <td>{option.count}</td>
                 </tr>
