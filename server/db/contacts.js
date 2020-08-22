@@ -31,8 +31,8 @@ function handleContacts(contacts, accountId) {
 
       case 'updated':
       insPromises.push(dbh.pool.query({
-        sql: ('UPDATE `contacts` SET `phone`=?, `name`=? WHERE `id`=?'),
-        values: [contact.phone, contact.name, contact.id]
+        sql: ('UPDATE `contacts` SET `phone`=?, `name`=?, `updated_at`=? WHERE `id`=?'),
+        values: [contact.phone, contact.name, new Date(Date.now()), contact.id]
       }));
       break;
     }
