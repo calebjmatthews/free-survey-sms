@@ -44,17 +44,7 @@ export default function Results() {
         <div className="resp-container">
           <h3>Survey Results:</h3>
           <div className="resp-row">
-            <div className="resp-row-child">
-              <PieChart
-                style={{
-                  fontFamily: '"Manrope", sans-serif',
-                  fontSize: '0.6em',
-                }}
-                data={getPieData()}
-                animate
-                label={({ dataEntry }) => `${dataEntry.title} ${Math.round(dataEntry.percentage)}%`}
-              />
-            </div>
+            {renderPieChart()}
             {renderTable()}
           </div>
         </div>
@@ -75,7 +65,7 @@ export default function Results() {
     return null;
   }
 
-  function getPieData() {
+  function renderPieChart() {
     let pieData = [];
     data.surveyOptions.map((option, index) => {
       if (option.count > 0) {
@@ -86,7 +76,28 @@ export default function Results() {
         })
       }
     });
-    return pieData;
+    if (pieData.length > 0) {
+      return (
+        <div className="resp-row-child">
+          <PieChart
+            style={{
+              fontFamily: '"Manrope", sans-serif',
+              fontSize: '0.6em',
+            }}
+            data={pieData}
+            animate
+            label={({ dataEntry }) => `${dataEntry.title} ${Math.round(dataEntry.percentage)}%`}
+          />
+        </div>
+      );
+    }
+    return (
+      <div className="resp-row-child">
+        <div className="info-box">
+          No responses to the survey have been received yet, check back later!
+        </div>
+      </div>
+    );
   }
 
   function renderTable() {
