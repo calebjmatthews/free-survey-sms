@@ -46,7 +46,15 @@ export default function Login() {
         switch(res.data.message) {
           case('Success'):
           window.localStorage.setItem('account', JSON.stringify(res.data.account));
-          location.assign('/');
+          let originalPath = location.pathname.slice(7);
+          originalPath = originalPath.replace('%2F', '/');
+          if (originalPath.length > 1) {
+            location.assign('/' + originalPath);
+          }
+          else {
+            location.assign('/');
+          }
+
           setErrorMessage(null);
           break;
 
@@ -65,6 +73,12 @@ export default function Login() {
     .catch((err) => {
       setErrorMessage('An unknown error occurred while logging in, please try again later: ' + err);
     });
+  }
+
+  let originalPath = location.pathname.slice(7);
+  originalPath = originalPath.replace('%2F', '/');
+  if (originalPath.length > 1 && errorMessage == null) {
+    setErrorMessage('Please login to access https://textpoll.app/' + originalPath);
   }
 
   return (
@@ -97,7 +111,7 @@ export default function Login() {
 
   function renderError() {
     if (errorMessage != null) {
-      return (<div className="invalid">{errorMessage}</div>)
+      return (<p className="invalid">{errorMessage}</p>)
     }
     return null;
   }

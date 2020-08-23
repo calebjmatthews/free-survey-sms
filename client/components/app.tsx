@@ -20,6 +20,9 @@ export default function App() {
             <Route path="/login">
               <Login />
             </Route>
+            <Route path="/login/:originalPath">
+              <Login />
+            </Route>
             <Route path="/r/:surveyId">
               <Results />
             </Route>

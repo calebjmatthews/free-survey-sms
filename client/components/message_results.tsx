@@ -38,6 +38,9 @@ export default function MessageResults() {
     .catch((err) => {
       console.log('err');
       console.log(err);
+      if (err.response.status == 403) {
+        location.assign('/login/' + encodeURIComponent(location.pathname.slice(1)));
+      }
     });
   });
 
