@@ -131,6 +131,9 @@ export default function Home() {
     let newInvalid = checkInvalid();
     setInvalid(newInvalid);
     if (newInvalid.length == 0) {
+      setData((oldData) => {
+        return Object.assign({}, oldData, { status: 'sending' });
+      })
       console.log('data');
       console.log(data);
       let signup = new SignupState(Object.assign({}, data.signupState));
@@ -153,6 +156,7 @@ export default function Home() {
         }).then((res) => {
           console.log('res');
           console.log(res);
+          location.assign('/messages/' + data.buildState.surveyId);
         });
       }
       else {
@@ -161,6 +165,7 @@ export default function Home() {
         }).then((res) => {
           console.log('res');
           console.log(res);
+          location.assign('/messages/' + data.buildState.surveyId);
         });
       }
     }
@@ -215,7 +220,17 @@ export default function Home() {
 
   if (data.status == 'init') {
     return (
-      <div className="resp-container">Loading...</div>
+      <div className="body">
+        <div className="resp-container">Loading...</div>
+      </div>
+    );
+  }
+
+  else if (data.status == 'sending') {
+    return (
+      <div className="body">
+        <div className="resp-container">Sending...</div>
+      </div>
     );
   }
 
