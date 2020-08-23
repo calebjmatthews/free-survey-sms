@@ -104,7 +104,8 @@ export default function Home() {
         res.data.contacts.map((contact: Contact) => {
           contactMap[contact.id] = new Contact({ id: contact.id,
             phone: utils.phoneNumberOut(contact.phone), name: contact.name,
-            status: 'existing' });
+            status: 'existing',
+            selected: (contact.selected_last == 1) });
         });
         setData((oldData) => {
           return Object.assign({}, oldData, {
@@ -183,12 +184,21 @@ export default function Home() {
         && !utils.phoneNumberIn(data.contactsState.newContact.phone)) {
         invalid.push('contact_phone|new');
       }
+      let anySelected = false;
       Object.keys(data.contactsState.contacts).map((contactId) => {
         let contact = data.contactsState.contacts[contactId]
         if (!utils.phoneNumberIn(contact.phone)) {
           invalid.push('contact_phone|' + contact.id);
         }
+        if (contact.selected) { anySelected = true; }
       })
+      if (data.contactsState.newContact.selected
+        && utils.phoneNumberIn(data.contactsState.newContact.phone)) {
+        anySelected = true;
+      }
+      if (!anySelected) {
+        invalid.push('no_contacts_selected');
+      }
     }
     if (utils.isEmpty(data.buildState.opener)) { invalid.push('opener'); }
     if (Object.keys(data.buildState.options).length == 0) {
@@ -257,6 +267,8 @@ export default function Home() {
       'confirm': 'Your password and its confirmation do not match',
       'no_contacts': 'Please add at least one contact',
       'contact_phone': 'Please use a ten digit phone number',
+      'no_contacts_selected': ('Please select at least one contact to receive '
+        + 'the survey'),
       'opener': 'Please add an opening message and question',
       'no_options': 'Please add at least two survey options',
       'option': 'Please add the text for the option',

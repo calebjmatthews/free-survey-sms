@@ -21,17 +21,24 @@ function insertNegativeUsage(accountId, usage) {
 }
 
 function checkUsageCoveredAndInsert(build, contacts, accountId, currentBalance) {
+  let selectedContacts = []
+  Object.keys(contacts.contacts).map((id) => {
+    let contact = contacts.contacts[id];
+    if (contact.selected) {
+      selectedContacts.push(contact);
+    }
+  });
   let questionCharCount = build.opener.length;
   Object.keys(build.options).map((letter) => {
     questionCharCount += build.options[letter].text.length;
   });
   let usage = ((Math.ceil(questionCharCount / 160)
-    + Math.ceil(build.response.length / 160)) * Object.keys(contacts.contacts).length);
+    + Math.ceil(build.response.length / 160)) * Object.keys(selectedContacts).length);
 
   if (usage <= currentBalance) {
     return Promise.all([
       insertNegativeUsage(accountId, usage),
-      insertAndSendMessages(build, contacts)
+      insertAndSendMessages(build, selectedContacts)
     ]);
   }
   else {

@@ -3,8 +3,14 @@ const utils = require('../utils');
 
 function insertSurveyContacts(contacts, accountId, surveyId) {
   let insPromises = [];
+  let selectedContacts = []
   Object.keys(contacts.contacts).map((id) => {
     let contact = contacts.contacts[id];
+    if (contact.selected) {
+      selectedContacts.push(contact);
+    }
+  });
+  selectedContacts.map((contact) => {
     let surveyContactId = utils.randHex(8);
     insPromises.push(dbh.pool.query({
       sql: ('INSERT INTO `survey_contacts`(`id`, `account_id`, `survey_id`, `active`, '

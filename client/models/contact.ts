@@ -5,6 +5,8 @@ export default class Contact {
   phone: string;
   name: string;
   status?: string;
+  selected?: boolean;
+  selected_last?: number;
 
   constructor(contact: Contact) {
     Object.assign(this, contact);
@@ -13,6 +15,9 @@ export default class Contact {
     }
     if (!this.status) {
       this.status = 'new';
+    }
+    if (this.selected == undefined) {
+      this.selected = true;
     }
   }
 }

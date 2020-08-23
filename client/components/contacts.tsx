@@ -102,10 +102,23 @@ export default function Contacts(props: {initState:
     props.updateParent({newContact: emptyContact, numContacts: numContacts});
   }
 
+  function toggleSelected(contact: Contact) {
+    setContactField(!contact.selected, 'selected', contact.id);
+    if (contact.status == 'existing') {
+      setContactField('updated', 'status', contact.id);
+    }
+  }
+
+  function toggleNewSelected() {
+    setNewContactField(!newContact.selected, 'selected');
+  }
+
   function renderInvalid(fieldName: string) {
     let invalidMessages = {
       'no_contacts': 'Please add at least one contact',
-      'contact_phone': 'Please use a ten digit phone number'
+      'contact_phone': 'Please use a ten digit phone number',
+      'no_contacts_selected': ('Please select at least one contact to receive '
+        + 'the survey')
     }
     let trueFieldName = fieldName;
     if (fieldName.includes('|')) {
@@ -125,9 +138,7 @@ export default function Contacts(props: {initState:
         return renderContact(contact);
       })}
       <div className="resp-row">
-        <div className="icon-button">
-          <FontAwesomeIcon icon="paper-plane" />
-        </div>
+        {renderNewSelectedButton()}
         <div className="input-group resp-row-child">
           <div className="input-label">Phone number</div>
           <input type="tel" value={newContact.phone}
@@ -145,15 +156,14 @@ export default function Contacts(props: {initState:
       </div>
       <div className="button" onClick={addContact}>Add row</div>
       {renderInvalid('no_contacts')}
+      {renderInvalid('no_contacts_selected')}
     </div>
   );
 
   function renderContact(contact: Contact) {
     return (
       <div className="resp-row" key={contact.id}>
-        <div className="icon-button">
-          <FontAwesomeIcon icon="paper-plane" />
-        </div>
+        {renderSelectedButton(contact)}
         <div className="input-group resp-row-child">
           <div className="input-label">Phone number</div>
           <input type="tel" value={contact.phone}
@@ -171,5 +181,35 @@ export default function Contacts(props: {initState:
         </div>
       </div>
     );
+  }
+
+  function renderSelectedButton(contact: Contact) {
+    if (contact.selected) {
+      return (
+        <div className="icon-button" onClick={() => toggleSelected(contact)}>
+          <FontAwesomeIcon icon="paper-plane" />
+        </div>
+      );
+    }else {
+      return (
+        <div className="icon-button" onClick={() => toggleSelected(contact)}>
+        </div>
+      );
+    }
+  }
+
+  function renderNewSelectedButton() {
+    if (newContact.selected) {
+      return (
+        <div className="icon-button" onClick={toggleNewSelected}>
+          <FontAwesomeIcon icon="paper-plane" />
+        </div>
+      );
+    }else {
+      return (
+        <div className="icon-button" onClick={toggleNewSelected}>
+        </div>
+      );
+    }
   }
 }

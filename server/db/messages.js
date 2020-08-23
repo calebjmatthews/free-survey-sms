@@ -12,8 +12,8 @@ function insertAndSendMessages(build, contacts, accountId) {
   });
   let insPromises = [];
   let messageIds = {};
-  Object.keys(contacts.contacts).map((id) => {
-    let contact = contacts.contacts[id];
+  Object.keys(contacts).map((id) => {
+    let contact = contacts[id];
     let messageId = utils.randHex(8);
     messageIds[id] = messageId;
     insPromises.push(dbh.pool.query({
@@ -26,8 +26,8 @@ function insertAndSendMessages(build, contacts, accountId) {
   });
   return Promise.all(insPromises)
   .then((res) => {
-    let contactIds = Object.keys(contacts.contacts);
-    return callSendAndUpdateMessages(contactIds, contacts.contacts, text, messageIds);
+    let contactIds = Object.keys(contacts);
+    return callSendAndUpdateMessages(contactIds, contacts, text, messageIds);
   });
 }
 

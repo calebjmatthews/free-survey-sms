@@ -5,8 +5,8 @@ function insertContacts(contacts, accountId) {
   Object.keys(contacts.contacts).map((id) => {
     let contact = contacts.contacts[id];
     insPromises.push(dbh.pool.query({
-      sql: ('INSERT INTO `contacts`(`id`, `account_id`, `phone`, `name`) '
-        + 'VALUES (?, ?, ?, ?)'),
+      sql: ('INSERT INTO `contacts`(`id`, `account_id`, `phone`, `name`, '
+        + '`selected_last`) VALUES (?, ?, ?, ?, ?)'),
       values: [contact.id, accountId, contact.phone, contact.name]
     }));
   });
@@ -23,16 +23,18 @@ function handleContacts(contacts, accountId) {
     switch(contact.status) {
       case 'new':
       insPromises.push(dbh.pool.query({
-        sql: ('INSERT INTO `contacts`(`id`, `account_id`, `phone`, `name`) '
-          + 'VALUES (?, ?, ?, ?)'),
-        values: [contact.id, accountId, contact.phone, contact.name]
+        sql: ('INSERT INTO `contacts`(`id`, `account_id`, `phone`, `name`, '
+          + '`selected_last`) VALUES (?, ?, ?, ?, ?)'),
+        values: [contact.id, accountId, contact.phone, contact.name, contact.selected]
       }));
       break;
 
       case 'updated':
-      insPromises.push(dbh.pool.query({
-        sql: ('UPDATE `contacts` SET `phone`=?, `name`=?, `updated_at`=? WHERE `id`=?'),
-        values: [contact.phone, contact.name, new Date(Date.now()), contact.id]
+      updPromises.push(dbh.pool.query({
+        sql: ('UPDATE `contacts` SET `phone`=?, `name`=?, `updated_at`=?, '
+          + '`selected_last`=? WHERE `id`=?'),
+        values: [contact.phone, contact.name, new Date(Date.now()),
+          contact.selected, contact.id]
       }));
       break;
     }
@@ -46,7 +48,8 @@ function handleContacts(contacts, accountId) {
     }));
   });
 
-  return Promise.all(insPromises, updPromises, delPromises);
+  return Promise.all([Promise.all(insPromises), Promise.all(updPromises),
+    Promise.all(delPromises)]);
 }
 
 module.exports = { handleContacts, insertContacts }
