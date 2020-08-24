@@ -51,13 +51,15 @@ export default function Build(props: {initState: {surveyId: string, opener: stri
     });
     let responseCharCount = response.length;
     if (showLink) { responseCharCount += (URL.length + 8); }
-    setSMSCount(new SMSCount({
+    let newSMSCount = new SMSCount({
       question: Math.ceil(questionCharCount / 160),
       response: Math.ceil(responseCharCount / 160),
       contacts: props.numContacts,
       total: ((Math.ceil(questionCharCount / 160) + Math.ceil(response.length / 160))
         * props.numContacts)
-    }))
+    });
+    setSMSCount(newSMSCount);
+    props.updateParent({smsCount: newSMSCount});
   }, [opener, options, newOption, response, showLink, props.numContacts]);
 
   function clearBuild() {

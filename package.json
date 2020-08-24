@@ -1,8 +1,8 @@
 {
-  "name": "cjm-portfolio",
-  "version": "2.0.0",
-  "description": "Personal portfolio to display programming projects",
-  "repository": "https://github.com/calebjmatthews/cjm-portfolio",
+  "name": "free-survey-sms",
+  "version": "0.9.0",
+  "description": "Easy and casual sms surveys with instant results",
+  "repository": "https://github.com/calebjmatthews/free-survey-sms",
   "private": false,
   "scripts": {
     "start": "node server/app.js",
