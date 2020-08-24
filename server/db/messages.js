@@ -2,8 +2,6 @@ const dbh = require('./db_handler').dbh;
 const utils = require('../utils');
 const sendAndUpdateMessage = require('../send_update_message');
 
-const FROM_PHONE_NUMBER = '+16692382810';
-
 function insertAndSendMessages(build, contacts, accountId) {
   let text = (build.opener + ' ');
   Object.keys(build.options).map((letter) => {
@@ -21,7 +19,7 @@ function insertAndSendMessages(build, contacts, accountId) {
         + '`contact_id`, `status`, `from`, `to`, `direction`, `text`) '
         + 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'),
       values: [messageId, accountId, build.surveyId, contact.id, 'initiated',
-        FROM_PHONE_NUMBER, contact.phone, 'outgoing', text]
+        process.env.TWILIO_PHONE_NUMBER, contact.phone, 'outgoing', text]
     }));
   });
   return Promise.all(insPromises)

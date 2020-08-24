@@ -6,7 +6,6 @@ const utils = require('./utils');
 
 const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
   'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-const FROM_PHONE_NUMBER = '+16692382810';
 const URL = 'textpoll.app/r/';
 
 function smsIncoming(payload) {
@@ -84,7 +83,7 @@ function smsIncoming(payload) {
               + 'VALUES (?, ?, ?, ?, ?, ?, ?, ?)'),
             values: [messageId, surveyContact.account_id, surveyContact.survey_id,
               surveyContact.contact_id, 'initiated',
-              FROM_PHONE_NUMBER, payload.From, responseSMS]
+              process.env.TWILIO_PHONE_NUMBER, payload.From, responseSMS]
           }),
           sendAndUpdateMessage(payload.From, responseSMS, messageId)
         ]);

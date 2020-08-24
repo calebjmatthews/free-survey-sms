@@ -1,11 +1,9 @@
 const client =
   require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 const dbh = require('./db/db_handler').dbh;
-  
-const FROM_PHONE_NUMBER = '+16692382810';
 
 function sendAndUpdateMessage(toPhone, text, messageId) {
-  let twiMsg = { to: toPhone, from: FROM_PHONE_NUMBER, body: text, };
+  let twiMsg = { to: toPhone, from: process.env.TWILIO_PHONE_NUMBER, body: text, };
   return client.messages.create(twiMsg)
   .then((message) => {
     return dbh.pool.query({
