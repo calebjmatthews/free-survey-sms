@@ -11,6 +11,7 @@ const issueToken = require('./passport').issueToken;
 const accountNewSubmission = require('./account_new_submission');
 const accountExistingSubmission = require('./account_existing_submission');
 const smsIncoming = require('./sms_incoming');
+const paypalIncoming = require('./paypal_incoming');
 const getSurveyResults = require('./db/get_survey_results');
 const getMessageResults = require('./db/get_message_results');
 const getAccountExisting = require('./db/get_account_existing');
@@ -114,7 +115,7 @@ module.exports = function(app) {
   app.post('/api/account_existing', (req, res) => {
     let payload = JSON.parse(req.body.payload);
     accountExistingSubmission(payload)
-    .then((anhRes) => {
+    .then((aehRes) => {
       res.status(200).send('Survey inserted');
     })
     .catch((err) => {
@@ -125,11 +126,20 @@ module.exports = function(app) {
   app.post('/api/sms_incoming', (req, res) => {
     res.status(200).send();
     smsIncoming(req.body)
-    .then((anhRes) => { })
+    .then((siRes) => { })
     .catch((err) => {
       console.error(err);
     })
   });
+
+  app.post('/api/paypal_incoming', (req, res) => {
+    res.status(200).send();
+    paypalIncoming(req.body)
+    .then((piRes) => { })
+    .catch((err) => {
+      console.error(err);
+    })
+  })
 
   app.all('/*', (req, res) => {
     res.sendFile(path.join(
